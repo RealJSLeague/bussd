@@ -1,18 +1,35 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import '../App.css';
 
 class App extends Component {
-  state = {
-    response: ''
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      response: 'default'
+    };
+  }
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.message }))
-      .catch(err => console.log(err));
+    this.callApi();
   }
 
   callApi = async () => {
+    axios.all([axios.get('/api/vehicles/'), axios.get('/api/stops/')]).then(
+      axios.spread((vehiclesRes, stopsRes) => {
+        const responseBody = {
+          vehicles: vehiclesRes.data,
+          stops: stopsRes.data
+        };
+        this.setState({
+          response: responseBody
+        });
+      })
+    );
+  };
+
+  /* callApi = async () => {
     const response = await fetch('/api/vehicles/');
     const body = await response.json();
 
@@ -20,7 +37,7 @@ class App extends Component {
 
     return body;
   };
-
+ */
   render() {
     return (
       <div className="App">
@@ -28,7 +45,7 @@ class App extends Component {
           <h1 className="App-title">Bussd</h1>
         </header>
         <p className="App-intro">This is bussd.</p>
-        <p>{this.state.response}</p>
+        <p />
       </div>
     );
   }
