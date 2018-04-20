@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import http from '../../node_modules/axios/lib/adapters/http';
-import '../App.css';
-
 // import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
@@ -45,21 +43,23 @@ class App extends Component {
     
     return (
       
-      <div className="App">
-      
-       <AppHeader>
-         <H2><h1 className="App-title">Bussd</h1></H2>  
-       </AppHeader>
-       
-       <AppBody>
+    <div className="App">
+     <AppHeader> 
+      <header className="App-header">
+        <H2><h2 className="App-title">Bussd</h2></H2>      
+      </header>
+       </ AppHeader > 
+      <AppBody>
          <BodyContainer >
           <MapContainer>
             <Map  />
           </MapContainer>
           </BodyContainer >
        </AppBody>
+    </div>
+       
      
-     </div> 
+    
        
        
     );

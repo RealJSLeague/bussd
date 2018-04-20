@@ -4,12 +4,12 @@ import image from  '../images/bus1.jpg';
 export const H1 = styled.h1`
 font-family: 'Advent Pro', 'Open Sans', sans-serif;
 margin-left: 2%px;
-margin-top:-3.5px;
+margin-top:-2px;
 `;
 export const H2 = styled.h2`
 font-family: 'Advent Pro', 'Open Sans', sans-serif;
 margin-left: 2%;
-margin-top: -2%;
+margin-top: -1.5%;
 `;
 export const H3 = styled.h3`
 font-family: 'Advent Pro', 'Open Sans', sans-serif;
@@ -23,7 +23,7 @@ font-family: 'Advent Pro', 'Open Sans', sans-serif;
 export const H6 = styled.h6`
 font-family: 'Advent Pro', 'Open Sans', sans-serif;
 `; 
-export const AppHeader = styled.header`
+export const AppHeader = styled.div`
 background-color: #222;
 height: 70px;
 padding-top:1px;
