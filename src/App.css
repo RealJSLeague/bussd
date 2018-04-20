@@ -1,8 +1,9 @@
-body {
-  font-family: 'Open Sans', sans-serif;
-}
 
-h1,
+
+  
+
+
+/* h1,
 h2,
 h3,
 h4,
@@ -10,3 +11,19 @@ h5,
 h6 {
   font-family: 'Advent Pro', 'Open Sans', sans-serif;
 }
+
+.App-header {
+  background-color: #222;
+  height:80px;
+  padding:1px; 
+  color:white;
+  
+ 
+}
+
+.App-title {
+ 
+ margin-left: 25px;
+
+} */
+

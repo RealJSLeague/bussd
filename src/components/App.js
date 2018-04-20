@@ -3,6 +3,10 @@ import axios from 'axios';
 import http from '../../node_modules/axios/lib/adapters/http';
 import '../App.css';
 
+// import '../App.css';
+import Map from './Map.js';
+import Styles from './Styles.js';
+import { H1,H2,AppHeader,AppBody,MapContainer,BodyContainer } from './Styles.js';
 class App extends Component {
   constructor() {
     super();
@@ -38,14 +42,35 @@ class App extends Component {
   };
 
   render() {
+    
     return (
+      
       <div className="App">
+<<<<<<< HEAD
         <header className="App-header">
           <h1 className="App-title">Bussd</h1>
         </header>
         <p className="App-intro">This is bussd.</p>
         <p />
       </div>
+=======
+      
+       <AppHeader>
+         <H2><h1 className="App-title">Bussd</h1></H2>  
+       </AppHeader>
+       
+       <AppBody>
+         <BodyContainer >
+          <MapContainer>
+            <Map  />
+          </MapContainer>
+          </BodyContainer >
+       </AppBody>
+     
+     </div> 
+       
+       
+>>>>>>> landingpage
     );
   }
 }
