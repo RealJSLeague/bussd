@@ -46,14 +46,6 @@ class App extends Component {
     return (
       
       <div className="App">
-<<<<<<< HEAD
-        <header className="App-header">
-          <h1 className="App-title">Bussd</h1>
-        </header>
-        <p className="App-intro">This is bussd.</p>
-        <p />
-      </div>
-=======
       
        <AppHeader>
          <H2><h1 className="App-title">Bussd</h1></H2>  
@@ -70,7 +62,6 @@ class App extends Component {
      </div> 
        
        
->>>>>>> landingpage
     );
   }
 }
