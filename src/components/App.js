@@ -57,12 +57,12 @@ class App extends Component {
 
   getVehicleData() {
     const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-    // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    // const remoteUrl =
-    //   'https://realtime.sdmts.com/api/api/where/vehicles-for-agency/MTS.json?key=' + process.env.REACT_APP_MTS_API_KEY;
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const remoteUrl =
+      'https://realtime.sdmts.com/api/api/where/vehicles-for-agency/MTS.json?key=' + process.env.REACT_APP_MTS_API_KEY;
 
-    axios.get('/api/vehicle/', config).then(res => {
-      const parsedRes = res.data;
+    axios.get(proxyUrl + remoteUrl, config).then(res => {
+      const parsedRes = res.data.data.list;
       //parsedRes = JSON.parse(parsedRes);
       this.setState({ vehicles: parsedRes });
     });
