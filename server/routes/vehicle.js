@@ -12,13 +12,10 @@ router.get('/', cache.route(), function(req, res) {
     .get(process.env.REACT_APP_REDIS_API)
     .then(function(response) {
       res.status(200).json(response.data.data.list);
-      console.log(response.data.data.list);
     })
     .catch(function(error) {
       console.log(error);
     });
-
-  console.log('get the api!');
 });
 
 module.exports = router;

@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
-import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface } from './Styles.js';
+import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface, VehicleDisplay } from './Styles.js';
 
 class App extends Component {
   constructor() {
@@ -16,16 +16,23 @@ class App extends Component {
       response: {},
       vehicles: [],
       stops: [],
-      selectedStop: 'Select a stop...'
+      selectedStop: 'Select a stop...',
+      selectedVehicle: 'Select a vehicle...'
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
     this.handleStopClick = this.handleStopClick.bind(this);
+    this.handleVehicleClick = this.handleVehicleClick.bind(this);
   }
 
   componentDidMount() {
     this.callApi();
+    this.intervalId = setInterval(() => this.getVehicleData(), 15000);
     this.getVehicleData();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   callApi = async () => {
@@ -101,6 +108,39 @@ class App extends Component {
     });
   }
 
+  handleVehicleClick(vehicleId, tripInfo, nextStop, relevantStopTime, scheduleDeviation) {
+    this.setState({
+      //selectedVehicle: vehicleId + ' / ' + tripId + ' / ' + nextStop + ' / ' + scheduleDeviation
+      selectedStop: '',
+      selectedVehicle: (
+        <VehicleDisplay>
+          {scheduleDeviation > 0 ? (
+            <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png" alt="Bus delayed" />
+          ) : (
+            <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
+          )}
+          <h2>
+            Bus {vehicleId} | Route {tripInfo.routeId}
+          </h2>
+          <h3>
+            <em>Next Stop {nextStop}</em>
+          </h3>
+          <h3>
+            <em>
+              Arriving @ {relevantStopTime}
+              {scheduleDeviation == 60 ? ' (' + scheduleDeviation / 60 + ' minute late)' : ''}
+              {scheduleDeviation > 60 ? ' (' + scheduleDeviation / 60 + ' minutes late)' : ''}
+            </em>
+            <em />
+          </h3>
+          <h3>
+            <em>Heading To {tripInfo.tripHeadSign}</em>
+          </h3>
+        </VehicleDisplay>
+      )
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -109,7 +149,7 @@ class App extends Component {
             <h1 className="App-title">Bussd</h1>
           </Grid>
         </AppHeader>
-
+        <div style={{ minHeight: '10vh' }} />
         <Grid style={{ paddingLeft: '0', paddingRight: '0' }}>
           <AppBody>
             <div style={{ height: '80vh' }}>
@@ -117,11 +157,13 @@ class App extends Component {
                 vehicles={this.state.vehicles}
                 stops={this.state.stops}
                 handleStopClick={this.handleStopClick}
+                handleVehicleClick={this.handleVehicleClick}
                 style={{ width: '100%' }}
               />
             </div>
             <Interface>
               <h1>{this.state.selectedStop}</h1>
+              {this.state.selectedVehicle}
             </Interface>
           </AppBody>
         </Grid>

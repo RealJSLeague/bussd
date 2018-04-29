@@ -34,7 +34,6 @@ app.use(cors());
 //   console.log('First Time Start');
 // };
 
-
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(express.static('build'));
@@ -48,12 +47,10 @@ var options = {
   quote: '"' // optional
 };
 
-
 var routejson = csvjson.toSchemaObject(routeData, options);
 var stoptimesjson = csvjson.toSchemaObject(stopTimesData, options);
 var stopjson = csvjson.toSchemaObject(stopData, options);
 var tripsjson = csvjson.toSchemaObject(tripsData, options);
-
 
 // Route.collection.insert(routejson, function(err, result) {
 //   console.log(result);
@@ -67,7 +64,6 @@ var tripsjson = csvjson.toSchemaObject(tripsData, options);
 // Trip.collection.insert(tripsjson, function(err, result) {
 //   console.log(result);
 // });
-
 
 app.use('/api/routes', require('./routes/routes'));
 app.use('/api/stop-times', require('./routes/stop-times'));
