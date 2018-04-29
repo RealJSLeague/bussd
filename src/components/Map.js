@@ -35,6 +35,8 @@ const MapWithAMarker = withScriptjs(
                     position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
                     onClick={() =>
                       props.vehicleClickEvent(
+                        vehicle.location.lat,
+                        vehicle.location.lon,
                         vehicle.vehicleId,
                         vehicle.tripId,
                         vehicle.tripStatus.nextStop,
@@ -50,6 +52,8 @@ const MapWithAMarker = withScriptjs(
                   position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
                   onClick={() =>
                     props.vehicleClickEvent(
+                      vehicle.location.lat,
+                      vehicle.location.long,
                       vehicle.vehicleId,
                       vehicle.tripId,
                       vehicle.tripStatus.nextStop,
@@ -103,7 +107,12 @@ class Map extends Component {
     });
   }
 
-  vehicleClickEvent(vehicleId, tripId, nextStop, scheduleDeviation) {
+  vehicleClickEvent(vehicleLat, vehicleLng, vehicleId, tripId, nextStop, scheduleDeviation) {
+    this.setState({
+      centerLat: vehicleLat,
+      centerLng: vehicleLng
+    });
+
     vehicleId = vehicleId.substr(4, vehicleId.length);
     tripId = tripId.substr(4, tripId.length);
     nextStop = nextStop.substr(4, nextStop.length);
@@ -200,7 +209,7 @@ class Map extends Component {
         </div>
       </LoadingContainer>
     ) : this.props.coords ? (
-      <div>
+      <div style={{ position: 'relative' }}>
         <RefreshButton onClick={this.forceUpdateHandler}>Refresh</RefreshButton>
         <MapWithAMarker
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXdLMabpElbXEYvWy9yZSj9VRf0dpFMmo&v=3.exp&libraries=geometry,drawing,places"
