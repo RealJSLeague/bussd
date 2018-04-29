@@ -108,11 +108,34 @@ class Map extends Component {
     tripId = tripId.substr(4, tripId.length);
     nextStop = nextStop.substr(4, nextStop.length);
 
-    axios.get('/api/stops/' + nextStop).then(stop => {
-      console.log(stop.data[0].stopName);
-      let nextStopName = stop.data[0].stopName;
-      this.props.handleVehicleClick(vehicleId, tripId, nextStopName, scheduleDeviation);
-    });
+    axios
+      .all([
+        axios.get('/api/stops/' + nextStop),
+        axios.get('/api/trips/' + tripId),
+        axios.get('/api/stop-times/' + nextStop)
+      ])
+      .then(
+        axios.spread((stopRes, tripRes, stopTimesRes) => {
+          let nextStopName = stopRes.data[0].stopName;
+
+          let tripInfo = {
+            routeId: tripRes.data[0].routeId,
+            tripHeadSign: tripRes.data[0].tripHeadSign
+          };
+
+          let relevantStopTime = null;
+
+          stopTimesRes.data.forEach(stopTime => {
+            if (tripId == stopTime.tripId) {
+              relevantStopTime = stopTime.arrivalTime;
+            }
+          });
+
+          console.log(relevantStopTime);
+
+          this.props.handleVehicleClick(vehicleId, tripInfo, nextStopName, relevantStopTime, scheduleDeviation);
+        })
+      );
   }
 
   handleSetCenter(lat, lng) {
@@ -120,7 +143,6 @@ class Map extends Component {
       centerLat: lat,
       centerLng: lng
     });
-    console.log(this.state.centerLat, this.state.centerLng);
   }
 
   forceUpdateHandler() {

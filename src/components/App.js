@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
-import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface } from './Styles.js';
+import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface, VehicleDisplay } from './Styles.js';
 
 class App extends Component {
   constructor() {
@@ -30,11 +30,11 @@ class App extends Component {
     this.intervalId = setInterval(() => this.getVehicleData(), 15000);
     this.getVehicleData();
   }
- 
+
   componentWillUnmount() {
     clearInterval(this.intervalId);
   }
-  
+
   callApi = async () => {
     const config = {
       adapter: http,
@@ -108,9 +108,31 @@ class App extends Component {
     });
   }
 
-  handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
+  handleVehicleClick(vehicleId, tripInfo, nextStop, relevantStopTime, scheduleDeviation) {
     this.setState({
-      selectedVehicle: vehicleId + ' / ' + tripId + ' / ' + nextStop + ' / ' + scheduleDeviation
+      //selectedVehicle: vehicleId + ' / ' + tripId + ' / ' + nextStop + ' / ' + scheduleDeviation
+      selectedStop: '',
+      selectedVehicle: (
+        <VehicleDisplay>
+          {scheduleDeviation > 0 ? (
+            <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png" alt="Bus delayed" />
+          ) : (
+            <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
+          )}
+          <h2>
+            Bus {vehicleId} | Route {tripInfo.routeId}
+          </h2>
+          <h3>
+            <em>Next Stop {nextStop}</em>
+          </h3>
+          <h3>
+            <em>Arriving @ {relevantStopTime}</em>
+          </h3>
+          <h3>
+            <em>Heading To {tripInfo.tripHeadSign}</em>
+          </h3>
+        </VehicleDisplay>
+      )
     });
   }
 
@@ -122,7 +144,7 @@ class App extends Component {
             <h1 className="App-title">Bussd</h1>
           </Grid>
         </AppHeader>
-        <div style={{ minHeight: '10vh' }}></div>
+        <div style={{ minHeight: '10vh' }} />
         <Grid style={{ paddingLeft: '0', paddingRight: '0' }}>
           <AppBody>
             <div style={{ height: '80vh' }}>
@@ -136,7 +158,7 @@ class App extends Component {
             </div>
             <Interface>
               <h1>{this.state.selectedStop}</h1>
-              <h1>{this.state.selectedVehicle}</h1>
+              {this.state.selectedVehicle}
             </Interface>
           </AppBody>
         </Grid>
