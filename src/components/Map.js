@@ -116,12 +116,7 @@ class Map extends Component {
       </LoadingContainer>
     ) : this.props.coords ? (
       <div>
-        <button
-          style={{ position: 'absolute', top: '80vh', margin: '30px', zIndex: '9999' }}
-          onClick={this.forceUpdateHandler}
-        >
-          FORCE UPDATE
-        </button>
+        <button style={{ backgroundColor: '#66bb6a', color: '#ffffff', fontWeight: 'bold', cursor: 'pointer', position: 'absolute', right: '8vw', top: '80vh', padding: '8px', border: '1px solid #18ab29', borderRadius: '10%', zIndex: '9999'}} onClick= {this.forceUpdateHandler} >Refresh</button>
         <MapWithAMarker
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXdLMabpElbXEYvWy9yZSj9VRf0dpFMmo&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: '100%' }} />}
