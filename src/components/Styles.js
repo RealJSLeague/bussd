@@ -81,6 +81,22 @@ export const Interface = styled.div`
   }
 `;
 
+export const VehicleDisplay = styled.div`
+  padding: 0 0 20px 0;
+
+  > h2 {
+    color: white;
+    display: inline-block;
+    font-size: 2.5em;
+    margin: 10px 10px 0px 20px;
+  }
+  > h3 {
+    color: white;
+    font-size: 2em;
+    margin: 10px 0;
+  }
+`;
+
 export const LoadingContainer = styled.div`
   height: 80vh;
   width: auto;
