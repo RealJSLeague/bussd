@@ -55,9 +55,9 @@ var tripsjson = csvjson.toSchemaObject(tripsData, options);
 // Route.collection.insert(routejson, function(err, result) {
 //   console.log(result);
 // });
-Stop.collection.insert(stopjson, function(err, result) {
-  console.log(result);
-});
+// Stop.collection.insert(stopjson, function(err, result) {
+//   console.log(result);
+// });
 // StopTime.collection.insert(stoptimesjson, function(err, result) {
 //   console.log(result);
 // });
