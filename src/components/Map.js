@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { geolocated } from 'react-geolocated';
 import { LoadingContainer, RefreshButton } from './Styles';
@@ -29,9 +30,35 @@ const MapWithAMarker = withScriptjs(
             const iconRed = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png';
             if (vehicle.location !== null && vehicle.tripStatus !== null) {
               if (vehicle.tripStatus.scheduleDeviation > 0) {
-                return <Marker position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }} icon={iconRed} />;
+                return (
+                  <Marker
+                    position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
+                    onClick={() =>
+                      props.vehicleClickEvent(
+                        vehicle.vehicleId,
+                        vehicle.tripId,
+                        vehicle.tripStatus.nextStop,
+                        vehicle.tripStatus.scheduleDeviation
+                      )
+                    }
+                    icon={iconRed}
+                  />
+                );
               }
-              return <Marker position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }} icon={iconGreen} />;
+              return (
+                <Marker
+                  position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
+                  onClick={() =>
+                    props.vehicleClickEvent(
+                      vehicle.vehicleId,
+                      vehicle.tripId,
+                      vehicle.tripStatus.nextStop,
+                      vehicle.tripStatus.scheduleDeviation
+                    )
+                  }
+                  icon={iconGreen}
+                />
+              );
             }
           })
         : console.log('no vehicles!')}
@@ -62,6 +89,7 @@ class Map extends Component {
       centerLng: ''
     };
     this.stopClickEvent = this.stopClickEvent.bind(this);
+    this.vehicleClickEvent = this.vehicleClickEvent.bind(this);
     this.handleSetCenter = this.handleSetCenter.bind(this);
     this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
   }
@@ -72,6 +100,18 @@ class Map extends Component {
     this.setState({
       centerLat: lat,
       centerLng: lng
+    });
+  }
+
+  vehicleClickEvent(vehicleId, tripId, nextStop, scheduleDeviation) {
+    vehicleId = vehicleId.substr(4, vehicleId.length);
+    tripId = tripId.substr(4, tripId.length);
+    nextStop = nextStop.substr(4, nextStop.length);
+
+    axios.get('/api/stops/' + nextStop).then(stop => {
+      console.log(stop.data[0].stopName);
+      let nextStopName = stop.data[0].stopName;
+      this.props.handleVehicleClick(vehicleId, tripId, nextStopName, scheduleDeviation);
     });
   }
 
@@ -129,6 +169,7 @@ class Map extends Component {
           centerLat={this.state.centerLat}
           centerLng={this.state.centerLng}
           stopClickEvent={this.stopClickEvent}
+          vehicleClickEvent={this.vehicleClickEvent}
           setCenter={this.handleSetCenter}
         />
       </div>

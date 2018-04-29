@@ -16,11 +16,13 @@ class App extends Component {
       response: {},
       vehicles: [],
       stops: [],
-      selectedStop: 'Select a stop...'
+      selectedStop: 'Select a stop...',
+      selectedVehicle: 'Select a vehicle...'
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
     this.handleStopClick = this.handleStopClick.bind(this);
+    this.handleVehicleClick = this.handleVehicleClick.bind(this);
   }
 
   componentDidMount() {
@@ -106,6 +108,12 @@ class App extends Component {
     });
   }
 
+  handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
+    this.setState({
+      selectedVehicle: vehicleId + ' / ' + tripId + ' / ' + nextStop + ' / ' + scheduleDeviation
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -122,11 +130,13 @@ class App extends Component {
                 vehicles={this.state.vehicles}
                 stops={this.state.stops}
                 handleStopClick={this.handleStopClick}
+                handleVehicleClick={this.handleVehicleClick}
                 style={{ width: '100%' }}
               />
             </div>
             <Interface>
               <h1>{this.state.selectedStop}</h1>
+              <h1>{this.state.selectedVehicle}</h1>
             </Interface>
           </AppBody>
         </Grid>
