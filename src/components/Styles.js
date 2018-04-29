@@ -32,7 +32,7 @@ export const AppHeader = styled.header`
   height: auto;
   box-shadow: 1px 1px 1px 2px grey;
   position: absolute;
-  z-index:99;
+  z-index: 99;
 `;
 
 export const AppBody = styled.div`
@@ -93,5 +93,24 @@ export const LoadingContainer = styled.div`
   > h1 {
     color: white;
     font-size: 2.5em;
+  }
+`;
+
+export const RefreshButton = styled.button`
+  background-color: #66bb6a;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  padding: 8px;
+  border: 1px solid #18ab29;
+  border-radius: 10%;
+  z-index: 9999;
+  transition: 0.5s all;
+
+  > &:hover {
+    background-color: #18ab29;
   }
 `;

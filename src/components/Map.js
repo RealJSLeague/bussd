@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { geolocated } from 'react-geolocated';
-import { LoadingContainer } from './Styles';
+import { LoadingContainer, RefreshButton } from './Styles';
 import { GeoLocation } from 'react-geolocation';
 import { MarkerClusterer } from 'react-google-maps/lib/components/addons/MarkerClusterer';
 
@@ -116,7 +116,7 @@ class Map extends Component {
       </LoadingContainer>
     ) : this.props.coords ? (
       <div>
-        <button style={{ backgroundColor: '#66bb6a', color: '#ffffff', fontWeight: 'bold', cursor: 'pointer', position: 'absolute', right: '8vw', top: '80vh', padding: '8px', border: '1px solid #18ab29', borderRadius: '10%', zIndex: '9999'}} onClick= {this.forceUpdateHandler} >Refresh</button>
+        <RefreshButton onClick={this.forceUpdateHandler}>Refresh</RefreshButton>
         <MapWithAMarker
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXdLMabpElbXEYvWy9yZSj9VRf0dpFMmo&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: '100%' }} />}
