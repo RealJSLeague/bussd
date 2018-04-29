@@ -107,6 +107,7 @@ class Map extends Component {
     vehicleId = vehicleId.substr(4, vehicleId.length);
     tripId = tripId.substr(4, tripId.length);
     nextStop = nextStop.substr(4, nextStop.length);
+    scheduleDeviation = parseInt(scheduleDeviation);
 
     axios
       .all([
@@ -128,10 +129,32 @@ class Map extends Component {
           stopTimesRes.data.forEach(stopTime => {
             if (tripId == stopTime.tripId) {
               relevantStopTime = stopTime.arrivalTime;
+              console.log(relevantStopTime);
+
+              let rtsSplit = relevantStopTime.split(':');
+              let rtsSeconds = +rtsSplit[0] * 60 * 60 + rtsSplit[1] * 60;
+              console.log('Converted: ' + rtsSeconds);
+              rtsSeconds = parseInt(rtsSeconds);
+              console.log('Parsed: ' + rtsSeconds);
+              let adjustedStopTime = scheduleDeviation + rtsSeconds;
+              console.log('Adjusted: ' + adjustedStopTime);
+
+              let adjustedHours = Math.floor(adjustedStopTime / 3600);
+              adjustedStopTime %= 3600;
+              let adjustedMinutes = Math.floor(adjustedStopTime / 60);
+
+              if (adjustedHours > 12) {
+                adjustedHours = adjustedHours - 12;
+              }
+
+              if (adjustedMinutes < 10) {
+                adjustedMinutes = '0' + adjustedMinutes;
+              }
+
+              relevantStopTime = adjustedHours + ':' + adjustedMinutes;
+              console.log(relevantStopTime);
             }
           });
-
-          console.log(relevantStopTime);
 
           this.props.handleVehicleClick(vehicleId, tripInfo, nextStopName, relevantStopTime, scheduleDeviation);
         })

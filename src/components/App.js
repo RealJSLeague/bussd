@@ -126,7 +126,12 @@ class App extends Component {
             <em>Next Stop {nextStop}</em>
           </h3>
           <h3>
-            <em>Arriving @ {relevantStopTime}</em>
+            <em>
+              Arriving @ {relevantStopTime}
+              {scheduleDeviation == 60 ? ' (' + scheduleDeviation / 60 + ' minute late)' : ''}
+              {scheduleDeviation > 60 ? ' (' + scheduleDeviation / 60 + ' minutes late)' : ''}
+            </em>
+            <em />
           </h3>
           <h3>
             <em>Heading To {tripInfo.tripHeadSign}</em>
