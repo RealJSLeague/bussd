@@ -108,8 +108,21 @@ class App extends Component {
     });
   }
 
-  handleVehicleClick(vehicleId, tripInfo, nextStop, relevantStopTime, scheduleDeviation) {
-    this.setState({
+  handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
+    axios
+      .get('/api/vehicle/transform', {
+        params: {
+          vehicleId: vehicleId,
+          tripId: tripId,
+          nextStop: nextStop,
+          scheduleDeviation: scheduleDeviation
+        }
+      })
+      .then((err, res) => {
+        err ? console.log(err) : console.log(res);
+      });
+
+    /* this.setState({
       //selectedVehicle: vehicleId + ' / ' + tripId + ' / ' + nextStop + ' / ' + scheduleDeviation
       selectedStop: '',
       selectedVehicle: (
@@ -138,7 +151,7 @@ class App extends Component {
           </h3>
         </VehicleDisplay>
       )
-    });
+    }); */
   }
 
   render() {

@@ -113,7 +113,9 @@ class Map extends Component {
       centerLng: vehicleLng
     });
 
-    vehicleId = vehicleId.substr(4, vehicleId.length);
+    this.props.handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation);
+
+    /* vehicleId = vehicleId.substr(4, vehicleId.length);
     tripId = tripId.substr(4, tripId.length);
     nextStop = nextStop.substr(4, nextStop.length);
     scheduleDeviation = parseInt(scheduleDeviation);
@@ -167,7 +169,7 @@ class Map extends Component {
 
           this.props.handleVehicleClick(vehicleId, tripInfo, nextStopName, relevantStopTime, scheduleDeviation);
         })
-      );
+      ); */
   }
 
   handleSetCenter(lat, lng) {
