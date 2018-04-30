@@ -7,7 +7,7 @@ import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
 import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface } from './Styles.js';
-
+import groupArray from 'group-array';
 class App extends Component {
   constructor() {
     super();
@@ -16,7 +16,9 @@ class App extends Component {
       response: {},
       vehicles: [],
       stops: [],
-      selectedStop: 'Select a stop...'
+      
+      selectedStop: 'Select a stop...',
+      selectedStopName: 'Stop Name'
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
@@ -50,7 +52,6 @@ class App extends Component {
       ])
       .then(
         axios.spread((routesRes, stopsRes) => {
-          // console.log(routesRes, stopsRes);
           const responseBody = {
             routes: routesRes.data,
             stops: stopsRes.data
@@ -62,47 +63,65 @@ class App extends Component {
       );
   };
 
+  
   getVehicleData() {
     const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-    // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    // const remoteUrl =
-    //   'https://realtime.sdmts.com/api/api/where/vehicles-for-agency/MTS.json?key=' + process.env.REACT_APP_MTS_API_KEY;
-
+    
     axios.get('/api/vehicle/', config).then(res => {
       const parsedRes = res.data;
-      //parsedRes = JSON.parse(parsedRes);
       this.setState({ vehicles: parsedRes });
     });
   }
 
-  handleStopClick(stopId) {
-    /* const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-
-    function convertSecs(time) {
-      let timeSplit = time.split(':');
-      let timeSplitSeconds = +timeSplit[0] * 60 * 60 + +timeSplit[1] * 60 + +timeSplit[2];
-      console.log(timeSplitSeconds);
-      return timeSplitSeconds;
-    }
-
-    let timeNow = moment().format('HH:mm:ss');
-    convertSecs(timeNow);
-
-    let matchedTimes = [];
-
-    axios.get('/api/stop-times/' + stopId, config).then(res => {
-      res.data.forEach(datum => {
-        let convertedDatum = convertSecs(datum.arrivalTime);
-        if (convertedDatum - timeNow > 0) {
-          matchedTimes.push(convertedDatum);
-        }
-      });
+  handleStopClick(stopId, stopName) {
+    const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
+    
+    let stopTimes = {},delay = {};
+    axios.get('/api/vehicle/', config)
+    .then(vehicleRes => {
+      for(let j=0;j< (vehicleRes.data.length);j++){  
+          if ((vehicleRes.data[j].tripStatus||vehicleRes.data[j].tripStatus) !== null ){
+            delay[vehicleRes.data[j].tripId.replace(/MTS_/g,"")] = 
+              { scheduleDeviation: vehicleRes.data[j].tripStatus.scheduleDeviation};
+          } 
+        }      
+        });
+      axios.get('/api/stop-times/'+stopId, config)
+      .then(stoptimeRes => {
+        for(let i=0;i< (stoptimeRes.data.length);i++){
+          
+          stopTimes[stoptimeRes.data[i].tripId] = 
+                    { arrivalTime: stoptimeRes.data[i].arrivalTime};
+          axios.get('/api/trips/'+stoptimeRes.data[i].tripId, config)
+             .then(tripRes => {
+ 
+              let timeNow = (moment().format('HH:mm:ss'));
+              let scheduledArrivalTime=moment((stopTimes[tripRes.data[0].tripId].arrivalTime),'HH:mm:ss');
+              let futureTime = moment(scheduledArrivalTime,'HH:mm:ss').isAfter(moment(timeNow,'HH:mm:ss'));
+              
+              // if(futureTime){
+             
+              console.log('routeId: '+tripRes.data[0].routeId+' -- To: '+ tripRes.data[0].tripHeadSign + ' -- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime + '-- TripId'+tripRes.data[0].tripId);  
+              let deviation = '';
+              if(tripRes.data[0].tripId in delay){
+                console.log('Scheduledeviation: ' +delay[tripRes.data[0].tripId].scheduleDeviation);
+                deviation = delay[tripRes.data[0].tripId].scheduleDeviation;
+              } else{
+                console.log('No Data');
+              }  
+              console.log('-------');
+              
+              // }  
+                        
+           });
+        }          
     });
+  
 
-    console.log(matchedTimes.length); */
-
+ 
     this.setState({
-      selectedStop: stopId
+      selectedStop: stopId,
+      selectedStopName: stopName
     });
   }
 
@@ -126,7 +145,8 @@ class App extends Component {
               />
             </div>
             <Interface>
-              <h1>{this.state.selectedStop}</h1>
+              <h3>{this.state.selectedStop}</h3>
+              <h3>{this.state.selectedStopName}</h3>
             </Interface>
           </AppBody>
         </Grid>

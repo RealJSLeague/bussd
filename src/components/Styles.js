@@ -76,7 +76,7 @@ export const Interface = styled.div`
   background-color: black;
   z-index: 9999;
 
-  > h1 {
+  > h3 {
     color: white;
   }
 `;

@@ -14,6 +14,7 @@
     "express-fileupload": "^0.4.0",
     "express-redis-cache": "^1.1.1",
     "fs": "0.0.1-security",
+    "group-array": "^0.3.3",
     "json2csv": "^4.1.2",
     "moment": "^2.22.1",
     "mongoose": "^5.0.15",
