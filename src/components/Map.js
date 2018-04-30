@@ -65,7 +65,7 @@ const MapWithAMarker = withScriptjs(
               );
             }
           })
-        : console.log('no vehicles!')}
+        : console.log('no vehicles')}
       <MarkerClusterer averageCenter enableRetinaIcons gridSize={60}>
         {props.stops
           ? props.stops.map(stop => {
