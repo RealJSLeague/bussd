@@ -17,8 +17,9 @@ class App extends Component {
       vehicles: [],
       stops: [],
       selectedStop: 'Select a stop...',
-      busStopInformation: []
-      
+      busStopInformation: [],
+      deviation: ''
+          
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
@@ -77,7 +78,7 @@ class App extends Component {
     const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
     
     let stopTimes = {},delay = {}, timing = [];
-    let timingMap = [];
+    let timingMap = [];let deviation = '';
     axios.get('/api/vehicle/', config)
     .then(vehicleRes => {
       for(let j=0;j< (vehicleRes.data.length);j++){  
@@ -103,22 +104,17 @@ class App extends Component {
                if(futureTime){
              
              // console.log('routeId: '+tripRes.data[0].routeId+' -- To: '+ tripRes.data[0].tripHeadSign + ' -- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime + '-- TripId'+tripRes.data[0].tripId);  
-              let deviation = '';
+              
               if(tripRes.data[0].tripId in delay){
-               // console.log('Scheduledeviation: ' +delay[tripRes.data[0].tripId].scheduleDeviation);
                 deviation = delay[tripRes.data[0].tripId].scheduleDeviation;
-                if(deviation ==0){
-                  deviation = 'Arrives OnTime';
-                }else if (deviation < 0){
-                  deviation = 'Arrives ' + deviation/60 + 'mins earlier';
-                }
-                else {
-                  deviation = 'Delayed by ' + deviation/60 + 'mins';
-                }
+                this.setState({deviation:deviation});
+                
               } else{
                // console.log('No Data');
                 deviation = 'No Data';
+                this.setState({deviation:deviation});
               }  
+              
               
               let key = tripRes.data[0].routeId +':'+tripRes.data[0].tripHeadSign;
               let keyContains = false, counterValue = 0;
@@ -129,27 +125,28 @@ class App extends Component {
                   counterValue = tempKeySplit[1];
                   // break;
                 }
-              });
+              }); 
+              
               if(keyContains){
                 if(!(counterValue>3)){
                   timingMap.pop(key+'--'+counterValue);
                   timingMap.push(key+'--'+(counterValue+1));
                   timing.push(tripRes.data[0].routeId+
-                    '--> '+ tripRes.data[0].tripHeadSign +
+                    '--'+ tripRes.data[0].tripHeadSign +
                   ' -- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime +
                   
-                  '-- Delay : '+deviation);
+                  '-- Delay : '+this.state.deviation);
                 }
               }else{
                 timingMap.push(key+'--'+counterValue);
                 timing.push(tripRes.data[0].routeId+
-                  '--> '+ tripRes.data[0].tripHeadSign + 
+                  '--'+ tripRes.data[0].tripHeadSign + 
                   '-- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime + 
                   
-                  '-- Delay : '+deviation);
+                  '-- Delay : '+this.state.deviation);
               }            
                }  
-                        
+                      
            });
         }          
     });
@@ -158,6 +155,7 @@ class App extends Component {
     this.setState({
       selectedStop: stopName,
       busStopInformation: timing
+    
       // selectedStopName: stopName
     });
   }
