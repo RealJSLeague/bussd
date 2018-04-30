@@ -70,17 +70,29 @@ export const Interface = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 10vh;
-  height: auto;
+  
+  height: 5%;
   width: 100%;
   background-color: black;
+  overflow: scroll;
   z-index: 9999;
 
-  > h3 {
+  > h3,div {
     color: white;
   }
+  
 `;
 
+export const ListContainer = styled.div`
+  
+  >li {
+    color: white;
+    
+   }
+  > ul {
+    list-style-type: none;
+  }
+`;
 export const LoadingContainer = styled.div`
   height: 80vh;
   width: auto;
