@@ -86,18 +86,30 @@ export const Interface = styled.div`
 `;
 
 export const VehicleDisplay = styled.div`
-  padding: 0 0 20px 0;
+  padding: 0;
+
+  @media (min-width: 1024px) {
+    padding: 0 0 20px 0;
+  }
 
   > h2 {
     color: white;
     display: inline-block;
-    font-size: 2.5em;
+    font-size: 1.25em;
     margin: 10px 10px 0px 20px;
+
+    @media (min-width: 1024px) {
+      font-size: 2em;
+    }
   }
   > h3 {
     color: white;
-    font-size: 2em;
+    font-size: 1em;
     margin: 10px 0;
+
+    @media (min-width: 1024px) {
+      font-size: 2em;
+    }
   }
 `;
 
