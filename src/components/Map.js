@@ -113,62 +113,6 @@ class Map extends Component {
     });
 
     this.props.handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation);
-
-    /* vehicleId = vehicleId.substr(4, vehicleId.length);
-    tripId = tripId.substr(4, tripId.length);
-    nextStop = nextStop.substr(4, nextStop.length);
-    scheduleDeviation = parseInt(scheduleDeviation);
-
-    axios
-      .all([
-        axios.get('/api/stops/' + nextStop),
-        axios.get('/api/trips/' + tripId),
-        axios.get('/api/stop-times/' + nextStop)
-      ])
-      .then(
-        axios.spread((stopRes, tripRes, stopTimesRes) => {
-          let nextStopName = stopRes.data[0].stopName;
-
-          let tripInfo = {
-            routeId: tripRes.data[0].routeId,
-            tripHeadSign: tripRes.data[0].tripHeadSign
-          };
-
-          let relevantStopTime = null;
-
-          stopTimesRes.data.forEach(stopTime => {
-            if (tripId == stopTime.tripId) {
-              relevantStopTime = stopTime.arrivalTime;
-              console.log(relevantStopTime);
-
-              let rtsSplit = relevantStopTime.split(':');
-              let rtsSeconds = +rtsSplit[0] * 60 * 60 + rtsSplit[1] * 60;
-              console.log('Converted: ' + rtsSeconds);
-              rtsSeconds = parseInt(rtsSeconds);
-              console.log('Parsed: ' + rtsSeconds);
-              let adjustedStopTime = scheduleDeviation + rtsSeconds;
-              console.log('Adjusted: ' + adjustedStopTime);
-
-              let adjustedHours = Math.floor(adjustedStopTime / 3600);
-              adjustedStopTime %= 3600;
-              let adjustedMinutes = Math.floor(adjustedStopTime / 60);
-
-              if (adjustedHours > 12) {
-                adjustedHours = adjustedHours - 12;
-              }
-
-              if (adjustedMinutes < 10) {
-                adjustedMinutes = '0' + adjustedMinutes;
-              }
-
-              relevantStopTime = adjustedHours + ':' + adjustedMinutes;
-              console.log(relevantStopTime);
-            }
-          });
-
-          this.props.handleVehicleClick(vehicleId, tripInfo, nextStopName, relevantStopTime, scheduleDeviation);
-        })
-      ); */
   }
 
   handleSetCenter(lat, lng) {
@@ -215,7 +159,7 @@ class Map extends Component {
         <MapWithAMarker
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXdLMabpElbXEYvWy9yZSj9VRf0dpFMmo&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: '100%' }} />}
-          containerElement={<div id="map-container" style={{ height: '80vh', width: 'auto', overflow: 'hidden' }} />}
+          containerElement={<div id="map-container" style={{ height: '90vh', width: 'auto', overflow: 'hidden' }} />}
           mapElement={<div style={{ height: '100%' }} />}
           lat={this.props.coords.latitude}
           lng={this.props.coords.longitude}
