@@ -24,45 +24,43 @@ router.get('/transform', (req, res) => {
   let nextStop = req.query.nextStop.substr(4, req.query.nextStop.length);
   let scheduleDeviation = parseInt(req.query.scheduleDeviation);
 
-  axios.get('http://localhost:8080/api/stops/' + nextStop).then((err, response) => {
-    err ? console.log(err) : response.status(200).json(response);
-  });
-
   /* axios
+    .get('http://localhost:8080/api/stops/' + nextStop)
+    .then(response => {
+      console.log(response.data);
+      res.status(200).json(response.data);
+    })
+    .catch(err => {
+      console.log(err);
+    }); */
+
+  axios
     .all([
-      axios.get('/api/stops/' + nextStop),
-      axios.get('/api/trips/' + tripId),
-      axios.get('/api/stop-times/' + nextStop)
+      axios.get('http://localhost:8080/api/stops/' + nextStop),
+      axios.get('http://localhost:8080/api/trips/' + tripId),
+      axios.get('http://localhost:8080/api/stop-times/' + nextStop)
     ])
     .then(
-      axios.spread((err, stopRes, tripRes, stopTimesRes) => {
-        err ? console.log(err) : console.log(stopRes, tripRes, stopTimesRes);
-        stopRes.status(200).json(stopRes, tripRes, stopTimesRes);
-      })
-    ); */
-  /* .then(
       axios.spread((stopRes, tripRes, stopTimesRes) => {
-        let nextStopName = stopRes.data[0].stopName;
-
         let tripInfo = {
+          nextStopName: stopRes.data[0].stopName,
           routeId: tripRes.data[0].routeId,
-          tripHeadSign: tripRes.data[0].tripHeadSign
+          tripHeadSign: tripRes.data[0].tripHeadSign,
+          relevantStopTime: null
         };
-
-        let relevantStopTime = null;
 
         stopTimesRes.data.forEach(stopTime => {
           if (tripId == stopTime.tripId) {
-            relevantStopTime = stopTime.arrivalTime;
-            console.log(relevantStopTime);
+            tripInfo.relevantStopTime = stopTime.arrivalTime;
+            //console.log(tripInfo.relevantStopTime);
 
-            let rtsSplit = relevantStopTime.split(':');
+            let rtsSplit = tripInfo.relevantStopTime.split(':');
             let rtsSeconds = +rtsSplit[0] * 60 * 60 + rtsSplit[1] * 60;
-            console.log('Converted: ' + rtsSeconds);
+            //console.log('Converted: ' + rtsSeconds);
             rtsSeconds = parseInt(rtsSeconds);
-            console.log('Parsed: ' + rtsSeconds);
+            //console.log('Parsed: ' + rtsSeconds);
             let adjustedStopTime = scheduleDeviation + rtsSeconds;
-            console.log('Adjusted: ' + adjustedStopTime);
+            //console.log('Adjusted: ' + adjustedStopTime);
 
             let adjustedHours = Math.floor(adjustedStopTime / 3600);
             adjustedStopTime %= 3600;
@@ -76,12 +74,16 @@ router.get('/transform', (req, res) => {
               adjustedMinutes = '0' + adjustedMinutes;
             }
 
-            relevantStopTime = adjustedHours + ':' + adjustedMinutes;
-            console.log(relevantStopTime);
+            tripInfo.relevantStopTime = adjustedHours + ':' + adjustedMinutes;
+            //console.log(tripInfo.relevantStopTime);
           }
         });
+        res.status(200).json(tripInfo);
       })
-    ); */
+    )
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 module.exports = router;

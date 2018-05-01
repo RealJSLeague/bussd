@@ -118,40 +118,38 @@ class App extends Component {
           scheduleDeviation: scheduleDeviation
         }
       })
-      .then((err, res) => {
-        err ? console.log(err) : console.log(res);
+      .then(res => {
+        this.setState({
+          selectedStop: '',
+          selectedVehicle: (
+            <VehicleDisplay>
+              {scheduleDeviation > 0 ? (
+                <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png" alt="Bus delayed" />
+              ) : (
+                <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
+              )}
+              <h2>Route {res.data.routeId}</h2>
+              <h3>
+                <em>Next Stop {res.data.nextStopName}</em>
+              </h3>
+              <h3>
+                <em>
+                  Arriving @ {res.data.relevantStopTime}
+                  {scheduleDeviation == 60 ? ' (' + scheduleDeviation / 60 + ' minute late)' : ''}
+                  {scheduleDeviation > 60 ? ' (' + scheduleDeviation / 60 + ' minutes late)' : ''}
+                </em>
+                <em />
+              </h3>
+              <h3>
+                <em>Heading To {res.data.tripHeadSign}</em>
+              </h3>
+            </VehicleDisplay>
+          )
+        });
+      })
+      .catch(err => {
+        console.log(err);
       });
-
-    /* this.setState({
-      //selectedVehicle: vehicleId + ' / ' + tripId + ' / ' + nextStop + ' / ' + scheduleDeviation
-      selectedStop: '',
-      selectedVehicle: (
-        <VehicleDisplay>
-          {scheduleDeviation > 0 ? (
-            <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png" alt="Bus delayed" />
-          ) : (
-            <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
-          )}
-          <h2>
-            Bus {vehicleId} | Route {tripInfo.routeId}
-          </h2>
-          <h3>
-            <em>Next Stop {nextStop}</em>
-          </h3>
-          <h3>
-            <em>
-              Arriving @ {relevantStopTime}
-              {scheduleDeviation == 60 ? ' (' + scheduleDeviation / 60 + ' minute late)' : ''}
-              {scheduleDeviation > 60 ? ' (' + scheduleDeviation / 60 + ' minutes late)' : ''}
-            </em>
-            <em />
-          </h3>
-          <h3>
-            <em>Heading To {tripInfo.tripHeadSign}</em>
-          </h3>
-        </VehicleDisplay>
-      )
-    }); */
   }
 
   render() {
