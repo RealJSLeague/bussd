@@ -124,9 +124,10 @@ class App extends Component {
           selectedVehicle: (
             <VehicleDisplay>
               {scheduleDeviation > 0 ? (
-                <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png" alt="Bus delayed" />
+                <img src="../../bus-icon-red.svg" alt="Bus delayed" />
               ) : (
-                <img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
+                <img src="../../bus-icon-green.svg" alt="Bus on time" />
+                //<img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
               )}
               <h2>Route {res.data.routeId}</h2>
               <h3>

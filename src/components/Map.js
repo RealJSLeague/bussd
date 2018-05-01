@@ -25,9 +25,8 @@ const MapWithAMarker = withScriptjs(
       <Marker position={{ lat: props.lat, lng: props.lng }} />
       {props.vehicles
         ? props.vehicles.map(vehicle => {
-            const icon = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon.png';
-            const iconGreen = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png';
-            const iconRed = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png';
+            const iconGreen = '../../bus-icon-green.svg';
+            const iconRed = '../../bus-icon-red.svg';
             if (vehicle.location !== null && vehicle.tripStatus !== null) {
               if (vehicle.tripStatus.scheduleDeviation > 0) {
                 return (
