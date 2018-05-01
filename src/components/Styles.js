@@ -24,7 +24,7 @@ export const H6 = styled.h6`
   font-family: 'Advent Pro', 'Open Sans', sans-serif;
 `;
 export const AppHeader = styled.header`
-  background-color: #222;
+  background-color: black;
   color: white;
   display: flex;
   width: 100%;
