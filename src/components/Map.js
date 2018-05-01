@@ -25,9 +25,8 @@ const MapWithAMarker = withScriptjs(
       <Marker position={{ lat: props.lat, lng: props.lng }} />
       {props.vehicles
         ? props.vehicles.map(vehicle => {
-            const icon = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon.png';
-            const iconGreen = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png';
-            const iconRed = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png';
+            const iconGreen = '../../bus-icon-green.svg';
+            const iconRed = '../../bus-icon-red.svg';
             if (vehicle.location !== null && vehicle.tripStatus !== null) {
               if (vehicle.tripStatus.scheduleDeviation > 0) {
                 return (
@@ -69,7 +68,7 @@ const MapWithAMarker = withScriptjs(
       <MarkerClusterer averageCenter enableRetinaIcons gridSize={60}>
         {props.stops
           ? props.stops.map(stop => {
-              const stopIcon = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-stop-icon.png';
+              const stopIcon = '../../bus-stop-icon.svg';
               return (
                 <Marker
                   key={stop.stopId}
@@ -113,7 +112,9 @@ class Map extends Component {
       centerLng: vehicleLng
     });
 
-    vehicleId = vehicleId.substr(4, vehicleId.length);
+    this.props.handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation);
+
+    /* vehicleId = vehicleId.substr(4, vehicleId.length);
     tripId = tripId.substr(4, tripId.length);
     nextStop = nextStop.substr(4, nextStop.length);
     scheduleDeviation = parseInt(scheduleDeviation);
@@ -167,7 +168,7 @@ class Map extends Component {
 
           this.props.handleVehicleClick(vehicleId, tripInfo, nextStopName, relevantStopTime, scheduleDeviation);
         })
-      );
+      ); */
   }
 
   handleSetCenter(lat, lng) {
