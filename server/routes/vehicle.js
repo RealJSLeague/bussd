@@ -19,26 +19,18 @@ router.get('/', cache.route(), function(req, res) {
 });
 
 router.get('/transform', (req, res) => {
+  const fullUrl = req.protocol + '://' + req.get('Host');
+
   let vehicleId = req.query.vehicleId.substr(4, req.query.vehicleId.length);
   let tripId = req.query.tripId.substr(4, req.query.tripId.length);
   let nextStop = req.query.nextStop.substr(4, req.query.nextStop.length);
   let scheduleDeviation = parseInt(req.query.scheduleDeviation);
 
-  /* axios
-    .get('http://localhost:8080/api/stops/' + nextStop)
-    .then(response => {
-      console.log(response.data);
-      res.status(200).json(response.data);
-    })
-    .catch(err => {
-      console.log(err);
-    }); */
-
   axios
     .all([
-      axios.get('http://localhost:8080/api/stops/' + nextStop),
-      axios.get('http://localhost:8080/api/trips/' + tripId),
-      axios.get('http://localhost:8080/api/stop-times/' + nextStop)
+      axios.get(fullUrl + '/api/stops/' + nextStop),
+      axios.get(fullUrl + '/api/trips/' + tripId),
+      axios.get(fullUrl + '/api/stop-times/' + nextStop)
     ])
     .then(
       axios.spread((stopRes, tripRes, stopTimesRes) => {
