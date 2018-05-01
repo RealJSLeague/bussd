@@ -30,7 +30,8 @@ export const AppHeader = styled.header`
   width: 100%;
   min-height: 10vh;
   height: auto;
-  box-shadow: 1px 1px 1px 2px grey;
+  //box-shadow: 1px 1px 1px 2px grey;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   position: absolute;
   z-index: 99;
 `;
@@ -46,6 +47,7 @@ export const AppBody = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
+  position: relative;
 
   > div {
     width: 100% !important;
@@ -70,11 +72,13 @@ export const Interface = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 10vh;
-  height: auto;
   width: 100%;
   background-color: black;
   z-index: 9999;
+  box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.16), 0px -3px 6px rgba(0, 0, 0, 0.23);
+  position: absolute;
+  bottom: 0;
+  transition: 1s all;
 
   > h1 {
     color: white;
@@ -119,14 +123,33 @@ export const RefreshButton = styled.button`
   cursor: pointer;
   position: absolute;
   right: 25px;
-  bottom: 25px;
+  top: 25px;
   padding: 8px;
   border: 1px solid #18ab29;
   border-radius: 10%;
   z-index: 9999;
   transition: 0.5s all;
 
-  > &:hover {
+  &:hover {
     background-color: #18ab29;
+  }
+`;
+
+export const HideButton = styled.button`
+  padding: 10px 18px;
+  background-color: transparent;
+  border: 3px solid white;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-size: 2em;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  transition: 0.5s all;
+
+  &:hover {
+    background-color: white;
+    color: black;
   }
 `;
