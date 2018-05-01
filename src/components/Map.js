@@ -68,7 +68,7 @@ const MapWithAMarker = withScriptjs(
       <MarkerClusterer averageCenter enableRetinaIcons gridSize={60}>
         {props.stops
           ? props.stops.map(stop => {
-              const stopIcon = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-stop-icon.png';
+              const stopIcon = '../../bus-stop-icon.svg';
               return (
                 <Marker
                   key={stop.stopId}
