@@ -46,6 +46,9 @@ const MapWithAMarker = withScriptjs(
       onDragEnd={() => {
         props.setCenter(this.mapRef.getCenter().lat(), this.mapRef.getCenter().lng());
       }}
+      onDragStart={() => {
+        props.resetMarker()
+      }}
     >
       <Marker position={{ lat: props.lat, lng: props.lng }} />
       {props.vehicles
@@ -126,6 +129,7 @@ class Map extends Component {
     this.vehicleClickEvent = this.vehicleClickEvent.bind(this);
     this.handleSetCenter = this.handleSetCenter.bind(this);
     this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
+    this.handleResetMarker = this.handleResetMarker.bind(this);
   }
 
   stopClickEvent(stopId, lat, lng) {
@@ -153,6 +157,13 @@ class Map extends Component {
       centerLat: lat,
       centerLng: lng
     });
+  }
+
+  handleResetMarker() {
+    this.setState({
+      selectedStop: null,
+      selectedVehicle: null
+    })
   }
 
   forceUpdateHandler() {
@@ -207,6 +218,7 @@ class Map extends Component {
           stopClickEvent={this.stopClickEvent}
           vehicleClickEvent={this.vehicleClickEvent}
           setCenter={this.handleSetCenter}
+          resetMarker={this.handleResetMarker}
         />
       </div>
     ) : (
