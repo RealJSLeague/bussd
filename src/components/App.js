@@ -116,8 +116,9 @@ class App extends Component {
 
     console.log(matchedTimes.length); */
 
+
     this.setState({
-      selectedStop: stopId
+      selectedStop: stopId,
     });
   }
 
@@ -190,6 +191,8 @@ class App extends Component {
               <Map
                 vehicles={this.state.vehicles}
                 stops={this.state.stops}
+                selectedStop={this.state.selectedStop}
+                selectedVehicle={this.state.selectedVehicle}
                 handleStopClick={this.handleStopClick}
                 handleVehicleClick={this.handleVehicleClick}
                 style={{ width: '100%' }}
