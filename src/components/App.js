@@ -6,7 +6,17 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
-import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface, VehicleDisplay } from './Styles.js';
+import {
+  H1,
+  H2,
+  AppHeader,
+  AppBody,
+  MapContainer,
+  BodyContainer,
+  Interface,
+  VehicleDisplay,
+  HideButton
+} from './Styles.js';
 
 class App extends Component {
   constructor() {
@@ -16,13 +26,16 @@ class App extends Component {
       response: {},
       vehicles: [],
       stops: [],
-      selectedStop: 'Select a stop...',
-      selectedVehicle: 'Select a vehicle...'
+      selectedStop: null,
+      selectedVehicle: null,
+      interfaceHeight: '0px',
+      interfaceButton: null
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
     this.handleStopClick = this.handleStopClick.bind(this);
     this.handleVehicleClick = this.handleVehicleClick.bind(this);
+    this.hideInterface = this.hideInterface.bind(this);
   }
 
   componentDidMount() {
@@ -103,8 +116,9 @@ class App extends Component {
 
     console.log(matchedTimes.length); */
 
+
     this.setState({
-      selectedStop: stopId
+      selectedStop: stopId,
     });
   }
 
@@ -127,7 +141,6 @@ class App extends Component {
                 <img src="../../bus-icon-red.svg" alt="Bus delayed" />
               ) : (
                 <img src="../../bus-icon-green.svg" alt="Bus on time" />
-                //<img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
               )}
               <h2>Route {res.data.routeId}</h2>
               <h3>
@@ -145,12 +158,22 @@ class App extends Component {
                 <em>Heading To {res.data.tripHeadSign}</em>
               </h3>
             </VehicleDisplay>
-          )
+          ),
+          interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
+          interfaceHeight: '25vh'
         });
       })
       .catch(err => {
         console.log(err);
       });
+  }
+
+  hideInterface() {
+    this.setState({
+      selectedVehicle: null,
+      interfaceButton: null,
+      interfaceHeight: '0px'
+    });
   }
 
   render() {
@@ -161,20 +184,23 @@ class App extends Component {
             <h1 className="App-title">Bussd</h1>
           </Grid>
         </AppHeader>
-        <div style={{ minHeight: '10vh' }} />
+        <div style={{ height: '10vh' }} />
         <Grid style={{ paddingLeft: '0', paddingRight: '0' }}>
           <AppBody>
-            <div style={{ height: '80vh' }}>
+            <div style={{ height: '90vh' }}>
               <Map
                 vehicles={this.state.vehicles}
                 stops={this.state.stops}
+                selectedStop={this.state.selectedStop}
+                selectedVehicle={this.state.selectedVehicle}
                 handleStopClick={this.handleStopClick}
                 handleVehicleClick={this.handleVehicleClick}
                 style={{ width: '100%' }}
               />
             </div>
-            <Interface>
-              <h1>{this.state.selectedStop}</h1>
+            <Interface style={{ height: this.state.interfaceHeight }}>
+              {this.state.interfaceButton}
+              {this.state.selectedStop}
               {this.state.selectedVehicle}
             </Interface>
           </AppBody>

@@ -26,6 +26,7 @@ router.get('/transform', (req, res) => {
   let nextStop = req.query.nextStop.substr(4, req.query.nextStop.length);
   let scheduleDeviation = parseInt(req.query.scheduleDeviation);
 
+
   axios
     .all([
       axios.get(fullUrl + '/api/stops/' + nextStop),
