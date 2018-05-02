@@ -44,10 +44,7 @@ const MapWithAMarker = withScriptjs(
       ref={ref => (this.mapRef = ref)}
       onIdle={props.onMapIdle}
       onDragEnd={() => {
-        props.setCenter(this.mapRef.getCenter().lat(), this.mapRef.getCenter().lng());
-      }}
-      onDragStart={() => {
-        props.resetMarker()
+        props.setCenter(this.mapRef.getCenter().lat(), this.mapRef.getCenter().lng()), props.resetMarker();
       }}
     >
       <Marker position={{ lat: props.lat, lng: props.lng }} />
