@@ -6,7 +6,17 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
-import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface, ListContainer } from './Styles.js';
+import {
+  H1,
+  H2,
+  AppHeader,
+  AppBody,
+  MapContainer,
+  BodyContainer,
+  Interface,
+  VehicleDisplay,
+  HideButton
+} from './Styles.js';
 
 class App extends Component {
   constructor() {
@@ -16,14 +26,16 @@ class App extends Component {
       response: {},
       vehicles: [],
       stops: [],
-      selectedStop: 'Select a stop...',
-      busStopInformation: [],
-      deviation: ''
-          
+      selectedStop: null,
+      selectedVehicle: null,
+      interfaceHeight: '0px',
+      interfaceButton: null
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
     this.handleStopClick = this.handleStopClick.bind(this);
+    this.handleVehicleClick = this.handleVehicleClick.bind(this);
+    this.hideInterface = this.hideInterface.bind(this);
   }
 
   componentDidMount() {
@@ -31,11 +43,11 @@ class App extends Component {
     this.intervalId = setInterval(() => this.getVehicleData(), 15000);
     this.getVehicleData();
   }
- 
+
   componentWillUnmount() {
     clearInterval(this.intervalId);
   }
-  
+
   callApi = async () => {
     const config = {
       adapter: http,
@@ -67,96 +79,103 @@ class App extends Component {
   
   getVehicleData() {
     const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-    
+    // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    // const remoteUrl =
+    //   'https://realtime.sdmts.com/api/api/where/vehicles-for-agency/MTS.json?key=' + process.env.REACT_APP_MTS_API_KEY;
+
     axios.get('/api/vehicle/', config).then(res => {
       const parsedRes = res.data;
+      //parsedRes = JSON.parse(parsedRes);
       this.setState({ vehicles: parsedRes });
     });
   }
 
-  handleStopClick(stopId, stopName) {
-    const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-    
-    let stopTimes = {},delay = {}, timing = [];
-    let timingMap = [];let deviation = '';
-    axios.get('/api/vehicle/', config)
-    .then(vehicleRes => {
-      for(let j=0;j< (vehicleRes.data.length);j++){  
-          if ((vehicleRes.data[j].tripStatus||vehicleRes.data[j].tripStatus) !== null ){
-            delay[vehicleRes.data[j].tripId.replace(/MTS_/g,"")] = 
-              { scheduleDeviation: vehicleRes.data[j].tripStatus.scheduleDeviation};
-          } 
-        }      
+  handleStopClick(stopId) {
+    /* const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
+
+    function convertSecs(time) {
+      let timeSplit = time.split(':');
+      let timeSplitSeconds = +timeSplit[0] * 60 * 60 + +timeSplit[1] * 60 + +timeSplit[2];
+      console.log(timeSplitSeconds);
+      return timeSplitSeconds;
+    }
+
+    let timeNow = moment().format('HH:mm:ss');
+    convertSecs(timeNow);
+
+    let matchedTimes = [];
+
+    axios.get('/api/stop-times/' + stopId, config).then(res => {
+      res.data.forEach(datum => {
+        let convertedDatum = convertSecs(datum.arrivalTime);
+        if (convertedDatum - timeNow > 0) {
+          matchedTimes.push(convertedDatum);
+        }
       });
-      axios.get('/api/stop-times/'+stopId, config)
-      .then(stoptimeRes => {
-        for(let i=0;i< (stoptimeRes.data.length);i++){
-          
-          stopTimes[stoptimeRes.data[i].tripId] = 
-                    { arrivalTime: stoptimeRes.data[i].arrivalTime};
-          axios.get('/api/trips/'+stoptimeRes.data[i].tripId, config)
-             .then(tripRes => {
- 
-              let timeNow = (moment().format('HH:mm:ss'));
-              let scheduledArrivalTime=moment((stopTimes[tripRes.data[0].tripId].arrivalTime),'HH:mm:ss');
-              let futureTime = moment(scheduledArrivalTime,'HH:mm:ss').isAfter(moment(timeNow,'HH:mm:ss'));
-              
-               if(futureTime){
-             
-             // console.log('routeId: '+tripRes.data[0].routeId+' -- To: '+ tripRes.data[0].tripHeadSign + ' -- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime + '-- TripId'+tripRes.data[0].tripId);  
-              
-              if(tripRes.data[0].tripId in delay){
-                deviation = delay[tripRes.data[0].tripId].scheduleDeviation;
-                this.setState({deviation:deviation});
-                
-              } else{
-               // console.log('No Data');
-                deviation = 'No Data';
-                this.setState({deviation:deviation});
-              }  
-              
-              
-              let key = tripRes.data[0].routeId +':'+tripRes.data[0].tripHeadSign;
-              let keyContains = false, counterValue = 0;
-              timingMap.forEach(element => {
-                let tempKeySplit = element.split('--');
-                if(tempKeySplit[0] === key){
-                  keyContains = true;
-                  counterValue = tempKeySplit[1];
-                  // break;
-                }
-              }); 
-              
-              if(keyContains){
-                if(!(counterValue>3)){
-                  timingMap.pop(key+'--'+counterValue);
-                  timingMap.push(key+'--'+(counterValue+1));
-                  timing.push(tripRes.data[0].routeId+
-                    '--'+ tripRes.data[0].tripHeadSign +
-                  ' -- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime +
-                  
-                  '-- Delay : '+this.state.deviation);
-                }
-              }else{
-                timingMap.push(key+'--'+counterValue);
-                timing.push(tripRes.data[0].routeId+
-                  '--'+ tripRes.data[0].tripHeadSign + 
-                  '-- Scheduled Arrival Time: '+ stopTimes[tripRes.data[0].tripId].arrivalTime + 
-                  
-                  '-- Delay : '+this.state.deviation);
-              }            
-               }  
-                      
-           });
-        }          
     });
-    
-    console.log(timing);
+
+    console.log(matchedTimes.length); */
+
     this.setState({
       selectedStop: stopName,
       busStopInformation: timing
     
       // selectedStopName: stopName
+    });
+  }
+
+  handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
+    axios
+      .get('/api/vehicle/transform', {
+        params: {
+          vehicleId: vehicleId,
+          tripId: tripId,
+          nextStop: nextStop,
+          scheduleDeviation: scheduleDeviation
+        }
+      })
+      .then(res => {
+        this.setState({
+          selectedStop: '',
+          selectedVehicle: (
+            <VehicleDisplay>
+              {scheduleDeviation > 0 ? (
+                <img src="../../bus-icon-red.svg" alt="Bus delayed" />
+              ) : (
+                <img src="../../bus-icon-green.svg" alt="Bus on time" />
+              )}
+              <h2>Route {res.data.routeId}</h2>
+              <h3>
+                <em>Next Stop {res.data.nextStopName}</em>
+              </h3>
+              <h3>
+                <em>
+                  Arriving @ {res.data.relevantStopTime}
+                  {scheduleDeviation == 60 ? ' (' + scheduleDeviation / 60 + ' minute late)' : ''}
+                  {scheduleDeviation > 60 ? ' (' + scheduleDeviation / 60 + ' minutes late)' : ''}
+                </em>
+                <em />
+              </h3>
+              <h3>
+                <em>Heading To {res.data.tripHeadSign}</em>
+              </h3>
+            </VehicleDisplay>
+          ),
+          interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
+          interfaceHeight: '25vh'
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  hideInterface() {
+    console.log('hide interface');
+    this.setState({
+      selectedVehicle: null,
+      interfaceButton: null,
+      interfaceHeight: '0px'
     });
   }
 
@@ -168,27 +187,25 @@ class App extends Component {
             <h1 className="App-title">Bussd</h1>
           </Grid>
         </AppHeader>
-        <div style={{ minHeight: '10vh' }}></div>
+        <div style={{ height: '10vh' }} />
         <Grid style={{ paddingLeft: '0', paddingRight: '0' }}>
           <AppBody>
-            <div style={{ height: '80vh' }}>
+            <div style={{ height: '90vh' }}>
               <Map
                 vehicles={this.state.vehicles}
                 stops={this.state.stops}
+                selectedStop={this.state.selectedStop}
+                selectedVehicle={this.state.selectedVehicle}
                 handleStopClick={this.handleStopClick}
+                handleVehicleClick={this.handleVehicleClick}
+                hideInterface={this.hideInterface}
                 style={{ width: '100%' }}
               />
             </div>
-            <Interface>
-              <h3>{this.state.selectedStop}</h3>
-              <ListContainer>
-              <ul>
-                {this.state.busStopInformation.map(function(listValue){
-                  return <li>{listValue}</li>;
-                })}
-              </ul>
-              </ListContainer>
-              
+            <Interface style={{ height: this.state.interfaceHeight }}>
+              {this.state.interfaceButton}
+              {this.state.selectedStop}
+              {this.state.selectedVehicle}
             </Interface>
           </AppBody>
         </Grid>
