@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.4.0",
+    "api": "^1.0.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
@@ -28,13 +29,18 @@
     "react-google-maps": "^9.4.5",
     "react-moment": "^0.7.0",
     "react-scripts": "1.1.4",
+    "request": "^2.85.0",
     "styled-components": "^3.2.5"
   },
   "scripts": {
     "start": "npm run build && npm run start-server",
     "start-server": "node ./server/index.js",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "jest",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "jest": "^22.4.3",
+    "supertest": "^3.0.0"
   }
 }

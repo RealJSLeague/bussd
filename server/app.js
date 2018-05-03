@@ -23,17 +23,16 @@ const router = express.Router();
 
 app.use(cors());
 
-try {
-  Route.collection.drop();
-  Stop.collection.drop();
-  StopTime.collection.drop();
-  Trip.collection.drop();
-}
-catch(err) {
-  console.log(err);
-  console.log('First Time Start');
-};
-
+// try {
+//   Route.collection.drop();
+//   Stop.collection.drop();
+//   StopTime.collection.drop();
+//   Trip.collection.drop();
+// }
+// catch(err) {
+//   console.log(err);
+//   console.log('First Time Start');
+// };
 
 app.use(bodyParser.json());
 app.use(morgan('dev'));
@@ -48,24 +47,24 @@ var options = {
   quote: '"' // optional
 };
 
-
 var routejson = csvjson.toSchemaObject(routeData, options);
 var stoptimesjson = csvjson.toSchemaObject(stopTimesData, options);
 var stopjson = csvjson.toSchemaObject(stopData, options);
 var tripsjson = csvjson.toSchemaObject(tripsData, options);
 
-Route.collection.insert(routejson, function(err, result) {
-  console.log(result);
-});
-Stop.collection.insert(stopjson, function(err, result) {
-  console.log(result);
-});
-StopTime.collection.insert(stoptimesjson, function(err, result) {
-  console.log(result);
-});
-Trip.collection.insert(tripsjson, function(err, result) {
-  console.log(result);
-});
+// Route.collection.insert(routejson, function(err, result) {
+//   console.log(result);
+// });
+// Stop.collection.insert(stopjson, function(err, result) {
+//   console.log(result);
+// });
+// StopTime.collection.insert(stoptimesjson, function(err, result) {
+//   console.log(result);
+// });
+// Trip.collection.insert(tripsjson, function(err, result) {
+//   console.log(result);
+// });
+
 app.use('/api/routes', require('./routes/routes'));
 app.use('/api/stop-times', require('./routes/stop-times'));
 app.use('/api/stops', require('./routes/stops'));

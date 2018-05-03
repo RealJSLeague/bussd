@@ -30,6 +30,9 @@ export const AppHeader = styled.header`
   width: 100%;
   min-height: 10vh;
   height: auto;
+  box-shadow: 1px 1px 1px 2px grey;
+  position: absolute;
+  z-index: 99;
 `;
 
 export const AppBody = styled.div`
@@ -71,9 +74,26 @@ export const Interface = styled.div`
   height: auto;
   width: 100%;
   background-color: black;
+  z-index: 9999;
 
   > h1 {
     color: white;
+  }
+`;
+
+export const VehicleDisplay = styled.div`
+  padding: 0 0 20px 0;
+
+  > h2 {
+    color: white;
+    display: inline-block;
+    font-size: 2.5em;
+    margin: 10px 10px 0px 20px;
+  }
+  > h3 {
+    color: white;
+    font-size: 2em;
+    margin: 10px 0;
   }
 `;
 
@@ -89,5 +109,24 @@ export const LoadingContainer = styled.div`
   > h1 {
     color: white;
     font-size: 2.5em;
+  }
+`;
+
+export const RefreshButton = styled.button`
+  background-color: #66bb6a;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  padding: 8px;
+  border: 1px solid #18ab29;
+  border-radius: 10%;
+  z-index: 9999;
+  transition: 0.5s all;
+
+  > &:hover {
+    background-color: #18ab29;
   }
 `;
