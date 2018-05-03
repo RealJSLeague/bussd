@@ -148,13 +148,13 @@ export const RefreshButton = styled.button`
 `;
 
 export const HideButton = styled.button`
-  padding: 10px 18px;
+  padding: 5px 9px;
   background-color: transparent;
-  border: 3px solid white;
+  border: 1.75px solid white;
   border-radius: 50%;
   color: white;
   cursor: pointer;
-  font-size: 2em;
+  font-size: 1em;
   position: absolute;
   top: 25px;
   right: 25px;
@@ -163,5 +163,11 @@ export const HideButton = styled.button`
   &:hover {
     background-color: white;
     color: black;
+  }
+
+  @media (min-width: 1024px) {
+    border: 3px solid white;
+    font-size: 2em;
+    padding: 10px 18px;
   }
 `;

@@ -116,9 +116,8 @@ class App extends Component {
 
     console.log(matchedTimes.length); */
 
-
     this.setState({
-      selectedStop: stopId,
+      selectedStop: stopId
     });
   }
 
@@ -169,6 +168,7 @@ class App extends Component {
   }
 
   hideInterface() {
+    console.log('hide interface');
     this.setState({
       selectedVehicle: null,
       interfaceButton: null,
@@ -195,6 +195,7 @@ class App extends Component {
                 selectedVehicle={this.state.selectedVehicle}
                 handleStopClick={this.handleStopClick}
                 handleVehicleClick={this.handleVehicleClick}
+                hideInterface={this.hideInterface}
                 style={{ width: '100%' }}
               />
             </div>

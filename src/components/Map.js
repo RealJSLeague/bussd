@@ -42,6 +42,7 @@ const MapWithAMarker = withScriptjs(
         lng: props.centerLng ? props.centerLng : props.lng
       }}
       ref={ref => (this.mapRef = ref)}
+      onClick={props.hideInterface}
       onIdle={props.onMapIdle}
       onDragEnd={() => {
         props.setCenter(this.mapRef.getCenter().lat(), this.mapRef.getCenter().lng()), props.resetMarker();
@@ -50,10 +51,28 @@ const MapWithAMarker = withScriptjs(
       <Marker position={{ lat: props.lat, lng: props.lng }} />
       {props.vehicles
         ? props.vehicles.map(vehicle => {
-          const iconGreen = '../../bus-icon-green.svg';
-          const iconRed = '../../bus-icon-red.svg';
-          if (vehicle.location !== null && vehicle.tripStatus !== null) {
-            if (vehicle.tripStatus.scheduleDeviation > 0) {
+            const iconGreen = '../../bus-icon-green.svg';
+            const iconRed = '../../bus-icon-red.svg';
+            if (vehicle.location !== null && vehicle.tripStatus !== null) {
+              if (vehicle.tripStatus.scheduleDeviation > 0) {
+                return (
+                  <Marker
+                    animation={vehicle.vehicleId === props.selectedVehicle ? google.maps.Animation.BOUNCE : ''}
+                    position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
+                    onClick={() =>
+                      props.vehicleClickEvent(
+                        vehicle.location.lat,
+                        vehicle.location.lon,
+                        vehicle.vehicleId,
+                        vehicle.tripId,
+                        vehicle.tripStatus.nextStop,
+                        vehicle.tripStatus.scheduleDeviation
+                      )
+                    }
+                    icon={iconRed}
+                  />
+                );
+              }
               return (
                 <Marker
                   animation={vehicle.vehicleId === props.selectedVehicle ? google.maps.Animation.BOUNCE : ''}
@@ -68,44 +87,26 @@ const MapWithAMarker = withScriptjs(
                       vehicle.tripStatus.scheduleDeviation
                     )
                   }
-                  icon={iconRed}
+                  icon={iconGreen}
                 />
               );
             }
-            return (
-              <Marker
-                animation={vehicle.vehicleId === props.selectedVehicle ? google.maps.Animation.BOUNCE : ''}
-                position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
-                onClick={() =>
-                  props.vehicleClickEvent(
-                    vehicle.location.lat,
-                    vehicle.location.long,
-                    vehicle.vehicleId,
-                    vehicle.tripId,
-                    vehicle.tripStatus.nextStop,
-                    vehicle.tripStatus.scheduleDeviation
-                  )
-                }
-                icon={iconGreen}
-              />
-            );
-          }
-        })
+          })
         : console.log('no vehicles!')}
       <MarkerClusterer averageCenter enableRetinaIcons gridSize={60}>
         {props.stops
           ? props.stops.map(stop => {
-            const stopIcon = '../../bus-stop-icon.svg';
-            return (
-              <Marker
-                animation={stop.stopId === props.selectedStop ? google.maps.Animation.BOUNCE : ''}
-                key={stop.stopId}
-                position={{ lat: stop.stopLat, lng: stop.stopLon }}
-                icon={stopIcon}
-                onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon)}
-              />
-            );
-          })
+              const stopIcon = '../../bus-stop-icon.svg';
+              return (
+                <Marker
+                  animation={stop.stopId === props.selectedStop ? google.maps.Animation.BOUNCE : ''}
+                  key={stop.stopId}
+                  position={{ lat: stop.stopLat, lng: stop.stopLon }}
+                  icon={stopIcon}
+                  onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon)}
+                />
+              );
+            })
           : console.log('no stops')}
       </MarkerClusterer>
     </GoogleMap>
@@ -160,7 +161,7 @@ class Map extends Component {
     this.setState({
       selectedStop: null,
       selectedVehicle: null
-    })
+    });
   }
 
   forceUpdateHandler() {
@@ -204,6 +205,7 @@ class Map extends Component {
           loadingElement={<div style={{ height: '100%' }} />}
           containerElement={<div id="map-container" style={{ height: '90vh', width: 'auto', overflow: 'hidden' }} />}
           mapElement={<div style={{ height: '100%' }} />}
+          hideInterface={this.props.hideInterface}
           lat={this.props.coords.latitude}
           lng={this.props.coords.longitude}
           vehicles={this.props.vehicles}
@@ -219,28 +221,28 @@ class Map extends Component {
         />
       </div>
     ) : (
-            <LoadingContainer>
-              <h1>
-                <em>Bussd</em>
-              </h1>
-              <div className="lds-css ng-scope" style={{ width: '200px', height: '200px' }}>
-                <div className="lds-spinner" style={{ width: '100%', height: '100%' }}>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </div>
-              </div>
-            </LoadingContainer>
-          );
+      <LoadingContainer>
+        <h1>
+          <em>Bussd</em>
+        </h1>
+        <div className="lds-css ng-scope" style={{ width: '200px', height: '200px' }}>
+          <div className="lds-spinner" style={{ width: '100%', height: '100%' }}>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </div>
+        </div>
+      </LoadingContainer>
+    );
   }
 }
 export default geolocated({
