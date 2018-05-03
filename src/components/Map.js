@@ -80,7 +80,7 @@ const MapWithAMarker = withScriptjs(
                   onClick={() =>
                     props.vehicleClickEvent(
                       vehicle.location.lat,
-                      vehicle.location.long,
+                      vehicle.location.lon,
                       vehicle.vehicleId,
                       vehicle.tripId,
                       vehicle.tripStatus.nextStop,
@@ -161,7 +161,7 @@ class Map extends Component {
     this.setState({
       selectedStop: null,
       selectedVehicle: null
-    })
+    });
   }
 
   forceUpdateHandler() {
