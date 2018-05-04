@@ -29,13 +29,15 @@ class App extends Component {
       selectedStop: null,
       selectedVehicle: null,
       interfaceHeight: '0px',
-      interfaceButton: null
+      interfaceButton: null,
+      iconBounce: false
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
     this.handleStopClick = this.handleStopClick.bind(this);
     this.handleVehicleClick = this.handleVehicleClick.bind(this);
     this.hideInterface = this.hideInterface.bind(this);
+    this.handleIconBounce = this.handleIconBounce.bind(this);
   }
 
   componentDidMount() {
@@ -116,9 +118,8 @@ class App extends Component {
 
     console.log(matchedTimes.length); */
 
-
     this.setState({
-      selectedStop: stopId,
+      selectedStop: stopId
     });
   }
 
@@ -172,7 +173,14 @@ class App extends Component {
     this.setState({
       selectedVehicle: null,
       interfaceButton: null,
-      interfaceHeight: '0px'
+      interfaceHeight: '0px',
+      iconBounce: false
+    });
+  }
+
+  handleIconBounce() {
+    this.setState({
+      iconBounce: true
     });
   }
 
@@ -193,8 +201,11 @@ class App extends Component {
                 stops={this.state.stops}
                 selectedStop={this.state.selectedStop}
                 selectedVehicle={this.state.selectedVehicle}
+                iconBounce={this.state.iconBounce}
+                handleIconBounce={this.handleIconBounce}
                 handleStopClick={this.handleStopClick}
                 handleVehicleClick={this.handleVehicleClick}
+                hideInterface={this.hideInterface}
                 style={{ width: '100%' }}
               />
             </div>
