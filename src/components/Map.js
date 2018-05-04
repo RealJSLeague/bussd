@@ -134,16 +134,12 @@ class Map extends Component {
     this.props.handleStopClick(stopId);
 
     this.setState({
-      centerLat: lat,
-      centerLng: lng,
       selectedStop: stopId
     });
   }
 
   vehicleClickEvent(vehicleLat, vehicleLng, vehicleId, tripId, nextStop, scheduleDeviation) {
     this.setState({
-      centerLat: vehicleLat,
-      centerLng: vehicleLng,
       selectedVehicle: vehicleId
     });
 
