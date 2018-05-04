@@ -42,7 +42,6 @@ const MapWithAMarker = withScriptjs(
         lng: props.centerLng ? props.centerLng : props.lng
       }}
       ref={ref => (this.mapRef = ref)}
-      onClick={props.hideInterface}
       onIdle={props.onMapIdle}
       onDragEnd={() => {
         props.setCenter(this.mapRef.getCenter().lat(), this.mapRef.getCenter().lng()), props.resetMarker();
@@ -51,28 +50,10 @@ const MapWithAMarker = withScriptjs(
       <Marker position={{ lat: props.lat, lng: props.lng }} />
       {props.vehicles
         ? props.vehicles.map(vehicle => {
-            const iconGreen = '../../bus-icon-green.svg';
-            const iconRed = '../../bus-icon-red.svg';
-            if (vehicle.location !== null && vehicle.tripStatus !== null) {
-              if (vehicle.tripStatus.scheduleDeviation > 0) {
-                return (
-                  <Marker
-                    animation={vehicle.vehicleId === props.selectedVehicle ? google.maps.Animation.BOUNCE : ''}
-                    position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
-                    onClick={() =>
-                      props.vehicleClickEvent(
-                        vehicle.location.lat,
-                        vehicle.location.lon,
-                        vehicle.vehicleId,
-                        vehicle.tripId,
-                        vehicle.tripStatus.nextStop,
-                        vehicle.tripStatus.scheduleDeviation
-                      )
-                    }
-                    icon={iconRed}
-                  />
-                );
-              }
+          const iconGreen = '../../bus-icon-green.svg';
+          const iconRed = '../../bus-icon-red.svg';
+          if (vehicle.location !== null && vehicle.tripStatus !== null) {
+            if (vehicle.tripStatus.scheduleDeviation > 0) {
               return (
                 <Marker
                   animation={vehicle.vehicleId === props.selectedVehicle ? google.maps.Animation.BOUNCE : ''}
@@ -87,110 +68,50 @@ const MapWithAMarker = withScriptjs(
                       vehicle.tripStatus.scheduleDeviation
                     )
                   }
-                  icon={iconGreen}
+                  icon={iconRed}
                 />
               );
             }
-          })
+            return (
+              <Marker
+                animation={vehicle.vehicleId === props.selectedVehicle ? google.maps.Animation.BOUNCE : ''}
+                position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
+                onClick={() =>
+                  props.vehicleClickEvent(
+                    vehicle.location.lat,
+                    vehicle.location.long,
+                    vehicle.vehicleId,
+                    vehicle.tripId,
+                    vehicle.tripStatus.nextStop,
+                    vehicle.tripStatus.scheduleDeviation
+                  )
+                }
+                icon={iconGreen}
+              />
+            );
+          }
+        })
         : console.log('no vehicles!')}
       <MarkerClusterer averageCenter enableRetinaIcons gridSize={60}>
         {props.stops
           ? props.stops.map(stop => {
-              const stopIcon = '../../bus-stop-icon.svg';
-              return (
-                <Marker
-                  animation={stop.stopId === props.selectedStop ? google.maps.Animation.BOUNCE : ''}
-                  key={stop.stopId}
-                  position={{ lat: stop.stopLat, lng: stop.stopLon }}
-                  icon={stopIcon}
-                  onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon)}
-                />
-              );
-            })
+            const stopIcon = '../../bus-stop-icon.svg';
+            return (
+              <Marker
+                animation={stop.stopId === props.selectedStop ? google.maps.Animation.BOUNCE : ''}
+                key={stop.stopId}
+                position={{ lat: stop.stopLat, lng: stop.stopLon }}
+                icon={stopIcon}
+                onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon)}
+              />
+            );
+          })
           : console.log('no stops')}
       </MarkerClusterer>
     </GoogleMap>
   ))
 );
 
-const MapWithAMarker = withScriptjs(
-  withGoogleMap(props => (
-    <GoogleMap
-      options={{ minZoom: 15, gestureHandling: 'greedy', disableDefaultUI: true }}
-      defaultZoom={19}
-      defaultCenter={{ lat: props.lat, lng: props.lng }}
-      center={{
-        lat: props.centerLat ? props.centerLat : props.lat,
-        lng: props.centerLng ? props.centerLng : props.lng
-      }}
-      ref={ref => (this.mapRef = ref)}
-      onIdle={props.onMapIdle}
-      onDragEnd={() => {
-        props.setCenter(this.mapRef.getCenter().lat(), this.mapRef.getCenter().lng());
-      }}
-    >
-      <Marker position={{ lat: props.lat, lng: props.lng }} />
-      {props.vehicles
-        ? props.vehicles.map(vehicle => {
-            const icon = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon.png';
-            const iconGreen = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png';
-            const iconRed = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-red.png';
-            if (vehicle.location !== null && vehicle.tripStatus !== null) {
-              if (vehicle.tripStatus.scheduleDeviation > 0) {
-                return (
-                  <Marker
-                    position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
-                    onClick={() =>
-                      props.vehicleClickEvent(
-                        vehicle.location.lat,
-                        vehicle.location.lon,
-                        vehicle.vehicleId,
-                        vehicle.tripId,
-                        vehicle.tripStatus.nextStop,
-                        vehicle.tripStatus.scheduleDeviation
-                      )
-                    }
-                    icon={iconRed}
-                  />
-                );
-              }
-              return (
-                <Marker
-                  position={{ lat: vehicle.location.lat, lng: vehicle.location.lon }}
-                  onClick={() =>
-                    props.vehicleClickEvent(
-                      vehicle.location.lat,
-                      vehicle.location.long,
-                      vehicle.vehicleId,
-                      vehicle.tripId,
-                      vehicle.tripStatus.nextStop,
-                      vehicle.tripStatus.scheduleDeviation
-                    )
-                  }
-                  icon={iconGreen}
-                />
-              );
-            }
-          })
-        : console.log('no vehicles!')}
-      <MarkerClusterer averageCenter enableRetinaIcons gridSize={60}>
-        {props.stops
-          ? props.stops.map(stop => {
-              const stopIcon = 'https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-stop-icon.png';
-              return (
-                <Marker
-                  key={stop.stopId}
-                  position={{ lat: stop.stopLat, lng: stop.stopLon }}
-                  icon={stopIcon}
-                  onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon)}
-                />
-              );
-            })
-          : console.log('no stops')}
-      </MarkerClusterer>
-    </GoogleMap>
-  ))
-);
 class Map extends Component {
   constructor() {
     super();
@@ -205,10 +126,7 @@ class Map extends Component {
     this.vehicleClickEvent = this.vehicleClickEvent.bind(this);
     this.handleSetCenter = this.handleSetCenter.bind(this);
     this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
-<<<<<<< HEAD
-=======
     this.handleResetMarker = this.handleResetMarker.bind(this);
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
   }
 
   stopClickEvent(stopId, lat, lng) {
@@ -238,97 +156,20 @@ class Map extends Component {
     });
   }
 
-<<<<<<< HEAD
-  vehicleClickEvent(vehicleLat, vehicleLng, vehicleId, tripId, nextStop, scheduleDeviation) {
-    this.setState({
-      centerLat: vehicleLat,
-      centerLng: vehicleLng
-    });
-
-    vehicleId = vehicleId.substr(4, vehicleId.length);
-    tripId = tripId.substr(4, tripId.length);
-    nextStop = nextStop.substr(4, nextStop.length);
-    scheduleDeviation = parseInt(scheduleDeviation);
-
-    axios
-      .all([
-        axios.get('/api/stops/' + nextStop),
-        axios.get('/api/trips/' + tripId),
-        axios.get('/api/stop-times/' + nextStop)
-      ])
-      .then(
-        axios.spread((stopRes, tripRes, stopTimesRes) => {
-          let nextStopName = stopRes.data[0].stopName;
-
-          let tripInfo = {
-            routeId: tripRes.data[0].routeId,
-            tripHeadSign: tripRes.data[0].tripHeadSign
-          };
-
-          let relevantStopTime = null;
-
-          stopTimesRes.data.forEach(stopTime => {
-            if (tripId == stopTime.tripId) {
-              relevantStopTime = stopTime.arrivalTime;
-              console.log(relevantStopTime);
-
-              let rtsSplit = relevantStopTime.split(':');
-              let rtsSeconds = +rtsSplit[0] * 60 * 60 + rtsSplit[1] * 60;
-              console.log('Converted: ' + rtsSeconds);
-              rtsSeconds = parseInt(rtsSeconds);
-              console.log('Parsed: ' + rtsSeconds);
-              let adjustedStopTime = scheduleDeviation + rtsSeconds;
-              console.log('Adjusted: ' + adjustedStopTime);
-
-              let adjustedHours = Math.floor(adjustedStopTime / 3600);
-              adjustedStopTime %= 3600;
-              let adjustedMinutes = Math.floor(adjustedStopTime / 60);
-
-              if (adjustedHours > 12) {
-                adjustedHours = adjustedHours - 12;
-              }
-
-              if (adjustedMinutes < 10) {
-                adjustedMinutes = '0' + adjustedMinutes;
-              }
-
-              relevantStopTime = adjustedHours + ':' + adjustedMinutes;
-              console.log(relevantStopTime);
-            }
-          });
-
-          this.props.handleVehicleClick(vehicleId, tripInfo, nextStopName, relevantStopTime, scheduleDeviation);
-        })
-      );
-  }
-
-  handleSetCenter(lat, lng) {
-    this.setState({
-      centerLat: lat,
-      centerLng: lng
-    });
-  }
-
-=======
   handleResetMarker() {
     this.setState({
       selectedStop: null,
       selectedVehicle: null
-    });
+    })
   }
 
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
   forceUpdateHandler() {
     this.forceUpdate();
     this.setState({
       centerLat: '',
-<<<<<<< HEAD
-      centerLng: ''
-=======
       centerLng: '',
       selectedStop: null,
       selectedVehicle: null
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
     });
   }
 
@@ -363,53 +204,43 @@ class Map extends Component {
           loadingElement={<div style={{ height: '100%' }} />}
           containerElement={<div id="map-container" style={{ height: '90vh', width: 'auto', overflow: 'hidden' }} />}
           mapElement={<div style={{ height: '100%' }} />}
-<<<<<<< HEAD
-=======
-          hideInterface={this.props.hideInterface}
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
           lat={this.props.coords.latitude}
           lng={this.props.coords.longitude}
           vehicles={this.props.vehicles}
           stops={this.props.stops}
-<<<<<<< HEAD
-=======
           selectedStop={this.state.selectedStop}
           selectedVehicle={this.state.selectedVehicle}
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
           centerLat={this.state.centerLat}
           centerLng={this.state.centerLng}
           stopClickEvent={this.stopClickEvent}
           vehicleClickEvent={this.vehicleClickEvent}
           setCenter={this.handleSetCenter}
-<<<<<<< HEAD
-=======
           resetMarker={this.handleResetMarker}
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
         />
       </div>
     ) : (
-      <LoadingContainer>
-        <h1>
-          <em>Bussd</em>
-        </h1>
-        <div className="lds-css ng-scope" style={{ width: '200px', height: '200px' }}>
-          <div className="lds-spinner" style={{ width: '100%', height: '100%' }}>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </div>
-        </div>
-      </LoadingContainer>
-    );
+            <LoadingContainer>
+              <h1>
+                <em>Bussd</em>
+              </h1>
+              <div className="lds-css ng-scope" style={{ width: '200px', height: '200px' }}>
+                <div className="lds-spinner" style={{ width: '100%', height: '100%' }}>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </div>
+              </div>
+            </LoadingContainer>
+          );
   }
 }
 export default geolocated({

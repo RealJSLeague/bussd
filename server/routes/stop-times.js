@@ -15,12 +15,19 @@ const StopTime = require('../models/StopTime');
     }
   );
 
-//   StopTime.find({ stopId: id }, 'tripId stopId arrivalTime departureTime', function(err, StopTime) {
-//     if (err) return handleError(err);
-//     console.log(StopTime.stopId);
-//     res.status(200).json(StopTime);
-//   });
-// }); 
+  router.get('/:id/transform', (req, res) => {
+    var id = req.params.id;
+    StopTime.find(
+      { 'stopId': id },
+      ' tripId stopId arrivalTime departureTime',
+      function(err, StopTime) {
+        if (err) return handleError(err);
+        
+        res.status(200).json(StopTime);
+      }
+    );
+   
+  });
 
 });
 

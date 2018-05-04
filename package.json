@@ -20,6 +20,7 @@
     "mongoose": "^5.0.15",
     "mongoose-to-csv": "^0.1.1",
     "morgan": "^1.9.0",
+    "nightmare": "^3.0.1",
     "path": "^0.12.7",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -37,10 +38,18 @@
     "start-server": "node ./server/index.js",
     "build": "react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
+    "babel-jest": "^22.4.3",
+    "babel-plugin-styled-components": "^1.5.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "cypress": "^2.1.0",
     "jest": "^22.4.3",
+    "react-test-renderer": "^16.3.2",
     "supertest": "^3.0.0"
   }
 }

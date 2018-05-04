@@ -17,8 +17,6 @@ router.get('/', cache.route(), function(req, res) {
       console.log(error);
     });
 });
-<<<<<<< HEAD
-=======
 
 router.get('/transform', (req, res) => {
   const fullUrl = req.protocol + '://' + req.get('Host');
@@ -80,6 +78,5 @@ router.get('/transform', (req, res) => {
       console.log(err);
     });
 });
->>>>>>> 220ca912725b6437759fb9a1e30cd87c76dfec89
 
 module.exports = router;

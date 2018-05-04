@@ -65,6 +65,7 @@ class App extends Component {
       ])
       .then(
         axios.spread((routesRes, stopsRes) => {
+          // console.log(routesRes, stopsRes);
           const responseBody = {
             routes: routesRes.data,
             stops: stopsRes.data
@@ -76,7 +77,6 @@ class App extends Component {
       );
   };
 
-  
   getVehicleData() {
     const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
     // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
@@ -91,38 +91,26 @@ class App extends Component {
   }
 
   handleStopClick(stopId) {
-    /* const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-
-    function convertSecs(time) {
-      let timeSplit = time.split(':');
-      let timeSplitSeconds = +timeSplit[0] * 60 * 60 + +timeSplit[1] * 60 + +timeSplit[2];
-      console.log(timeSplitSeconds);
-      return timeSplitSeconds;
-    }
-
-    let timeNow = moment().format('HH:mm:ss');
-    convertSecs(timeNow);
-
-    let matchedTimes = [];
-
-    axios.get('/api/stop-times/' + stopId, config).then(res => {
-      res.data.forEach(datum => {
-        let convertedDatum = convertSecs(datum.arrivalTime);
-        if (convertedDatum - timeNow > 0) {
-          matchedTimes.push(convertedDatum);
-        }
-      });
-    });
-
-    console.log(matchedTimes.length); */
-
-    this.setState({
-      selectedStop: stopName,
-      busStopInformation: timing
     
-      // selectedStopName: stopName
-    });
+    axios
+      .get('/api/stop-times/'+stopId+'/transform',{
+        params: {
+          stopId: stopId
+        }
+      }) 
+      .then(res => {
+        this.setState({
+          selectedStop: stopId,
+  
+        });
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
+      
   }
+
 
   handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
     axios
@@ -171,7 +159,6 @@ class App extends Component {
   }
 
   hideInterface() {
-    console.log('hide interface');
     this.setState({
       selectedVehicle: null,
       interfaceButton: null,
@@ -198,7 +185,6 @@ class App extends Component {
                 selectedVehicle={this.state.selectedVehicle}
                 handleStopClick={this.handleStopClick}
                 handleVehicleClick={this.handleVehicleClick}
-                hideInterface={this.hideInterface}
                 style={{ width: '100%' }}
               />
             </div>
