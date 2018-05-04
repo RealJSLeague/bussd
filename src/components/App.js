@@ -93,35 +93,26 @@ class App extends Component {
   }
 
   handleStopClick(stopId) {
-    /* const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-
-    function convertSecs(time) {
-      let timeSplit = time.split(':');
-      let timeSplitSeconds = +timeSplit[0] * 60 * 60 + +timeSplit[1] * 60 + +timeSplit[2];
-      console.log(timeSplitSeconds);
-      return timeSplitSeconds;
-    }
-
-    let timeNow = moment().format('HH:mm:ss');
-    convertSecs(timeNow);
-
-    let matchedTimes = [];
-
-    axios.get('/api/stop-times/' + stopId, config).then(res => {
-      res.data.forEach(datum => {
-        let convertedDatum = convertSecs(datum.arrivalTime);
-        if (convertedDatum - timeNow > 0) {
-          matchedTimes.push(convertedDatum);
+    
+    axios
+      .get('/api/stop-times/'+stopId+'/transform',{
+        params: {
+          stopId: stopId
         }
+      }) 
+      .then(res => {
+        this.setState({
+          selectedStop: stopId,
+  
+        });
+
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
-
-    console.log(matchedTimes.length); */
-
-    this.setState({
-      selectedStop: stopId
-    });
+      
   }
+
 
   handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
     axios
@@ -205,7 +196,6 @@ class App extends Component {
                 handleIconBounce={this.handleIconBounce}
                 handleStopClick={this.handleStopClick}
                 handleVehicleClick={this.handleVehicleClick}
-                hideInterface={this.hideInterface}
                 style={{ width: '100%' }}
               />
             </div>
