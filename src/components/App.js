@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import '../App.css';
 import Map from './Map.js';
 import Styles from './Styles.js';
-import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface, VehicleDisplay } from './Styles.js';
+import { H1, H2, AppHeader, AppBody, MapContainer, BodyContainer, Interface, VehicleDisplay, ListContainer} from './Styles.js';
 
 class App extends Component {
   constructor() {
@@ -16,8 +16,14 @@ class App extends Component {
       response: {},
       vehicles: [],
       stops: [],
+      
       selectedStop: 'Select a stop...',
-      selectedVehicle: 'Select a vehicle...'
+      selectedStopName: 'Stop Name',
+      selectedVehicle: 'Select a vehicle...',
+      busStopInformation: [],
+      busStopResponse:[],
+      deviation: '',
+      details: {}
     };
 
     this.getVehicleData = this.getVehicleData.bind(this);
@@ -66,10 +72,7 @@ class App extends Component {
 
   getVehicleData() {
     const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-    // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    // const remoteUrl =
-    //   'https://realtime.sdmts.com/api/api/where/vehicles-for-agency/MTS.json?key=' + process.env.REACT_APP_MTS_API_KEY;
-
+    
     axios.get('/api/vehicle/', config).then(res => {
       const parsedRes = res.data;
       //parsedRes = JSON.parse(parsedRes);
@@ -77,35 +80,28 @@ class App extends Component {
     });
   }
 
-  handleStopClick(stopId) {
-    /* const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-
-    function convertSecs(time) {
-      let timeSplit = time.split(':');
-      let timeSplitSeconds = +timeSplit[0] * 60 * 60 + +timeSplit[1] * 60 + +timeSplit[2];
-      console.log(timeSplitSeconds);
-      return timeSplitSeconds;
-    }
-
-    let timeNow = moment().format('HH:mm:ss');
-    convertSecs(timeNow);
-
-    let matchedTimes = [];
-
-    axios.get('/api/stop-times/' + stopId, config).then(res => {
-      res.data.forEach(datum => {
-        let convertedDatum = convertSecs(datum.arrivalTime);
-        if (convertedDatum - timeNow > 0) {
-          matchedTimes.push(convertedDatum);
+  handleStopClick(stopId, stopName) {
+    
+    axios
+      .get('/api/stop-times/'+stopId+'/transform',{
+        params: {
+          stopId: stopId
         }
+      })      
+      .then(res => {
+        this.setState({
+          selectedStop: stopName,
+          
+          busStopInformation: res.data   
+        
+        });
+        console.log(res.data);
+        
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
-
-    console.log(matchedTimes.length); */
-
-    this.setState({
-      selectedStop: stopId
-    });
+      
   }
 
   handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
@@ -127,7 +123,7 @@ class App extends Component {
                 <img src="../../bus-icon-red.svg" alt="Bus delayed" />
               ) : (
                 <img src="../../bus-icon-green.svg" alt="Bus on time" />
-                //<img src="https://s3.us-east-2.amazonaws.com/garethbk-portfolio/bus-icon-green.png" alt="Bus on time" />
+               
               )}
               <h2>Route {res.data.routeId}</h2>
               <h3>
@@ -176,6 +172,24 @@ class App extends Component {
             <Interface>
               <h1>{this.state.selectedStop}</h1>
               {this.state.selectedVehicle}
+              
+              <ul>
+                {this.state.busStopInformation.map(function(listValue){
+                  let listSplit = listValue.split('--');
+                return (<li><h2> {listSplit[0]}&nbsp;-&nbsp;
+                <span>{listSplit[1]}</span></h2>
+                <p> Arriving@  &nbsp;{listSplit[2]} &nbsp;<span>{listSplit[3]}</span></p>
+                {/* <p>{listSplit[4]}</p> */}
+                <hr />
+                  </li>
+                
+                );
+
+                })}
+              </ul>
+              
+              
+              
             </Interface>
           </AppBody>
         </Grid>
