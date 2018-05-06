@@ -79,14 +79,22 @@ export const Interface = styled.div`
   position: absolute;
   bottom: 0;
   transition: 1s all;
+  overflow-y: scroll;
+  overflow-x: hidden;
 
   > h1 {
+    color: white;
+  }
+
+  > ul {
+    list-style-type: none;
     color: white;
   }
 `;
 
 export const VehicleDisplay = styled.div`
   padding: 0;
+  margin: 55px 0 0 0;
 
   @media (min-width: 1024px) {
     padding: 0 0 20px 0;
@@ -169,5 +177,25 @@ export const HideButton = styled.button`
     border: 3px solid white;
     font-size: 2em;
     padding: 10px 18px;
+  }
+`;
+
+export const ListContainer = styled.div`
+  text-align: left;
+  > li {
+    color: white;
+  }
+  > ul {
+    list-style-type: none;
+    color: white;
+  }
+
+  > h1 {
+    color: yellow;
+    text-align: left;
+  }
+  > h2 {
+    color: yellow;
+    text-align: left;
   }
 `;
