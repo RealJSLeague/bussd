@@ -16,6 +16,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.get('/:id/transform', async (req, res) => {
+  const fullUrl = req.protocol + '://' + req.get('Host');
   let stopId = req.query.stopId;
   const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
 
@@ -28,10 +29,11 @@ router.get('/:id/transform', async (req, res) => {
   timing4 = [];
   let timingMap = [];
   var tempTimingMap = new Map();
-  await axios.get('http://localhost:8080/api/vehicle/', config).then(vehicleRes => {
+  await axios.get(fullUrl + '/api/vehicle/', config).then(vehicleRes => {
     for (let j = 0; j < vehicleRes.data.length; j++) {
       if ((vehicleRes.data[j].tripStatus || vehicleRes.data[j].tripStatus) !== null) {
         delay[vehicleRes.data[j].tripId.replace(/MTS_/g, '')] = {
+          vehicleId: vehicleRes,
           scheduleDeviation: vehicleRes.data[j].tripStatus.scheduleDeviation
         };
       }
@@ -53,7 +55,7 @@ router.get('/:id/transform', async (req, res) => {
 
     return ampm;
   }
-  await axios.get('http://localhost:8080/api/stop-times/' + stopId, config).then(async stoptimeRes => {
+  await axios.get(fullUrl + '/api/stop-times/' + stopId, config).then(async stoptimeRes => {
     for (let i = 0; i < stoptimeRes.data.length; i++) {
       let deviation = '';
       var arrivalTime = adjustTime(stoptimeRes.data[i].arrivalTime);
@@ -62,7 +64,7 @@ router.get('/:id/transform', async (req, res) => {
       stopTimes[stoptimeRes.data[i].tripId] = { arrivalTime: arrivalTime };
       //  console.log('StopTimes: '+ stopTimes[stoptimeRes.data[i].tripId].arrivalTime);
 
-      await axios.get('http://localhost:8080/api/trips/' + stoptimeRes.data[i].tripId, config).then(tripRes => {
+      await axios.get(fullUrl + '/api/trips/' + stoptimeRes.data[i].tripId, config).then(tripRes => {
         let timeNow = moment().format('HH:mm:ss');
         let scheduledArrivalTime = moment(stopTimes[tripRes.data[0].tripId].arrivalTime, 'HH:mm:ss');
         let futureTime = moment(scheduledArrivalTime, 'HH:mm:ss').isAfter(moment(timeNow, 'HH:mm:ss'));
