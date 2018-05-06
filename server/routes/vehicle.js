@@ -59,8 +59,8 @@ router.get('/transform', (req, res) => {
             //console.log('Converted: ' + rtsSeconds);
             rtsSeconds = parseInt(rtsSeconds);
             //console.log('Parsed: ' + rtsSeconds);
-            //let adjustedStopTime = scheduleDeviation + rtsSeconds;
-            let adjustedStopTime = rtsSeconds;
+            let adjustedStopTime = scheduleDeviation + rtsSeconds;
+            
             //console.log('Adjusted: ' + adjustedStopTime);
 
             let adjustedHours = Math.floor(adjustedStopTime / 3600);
