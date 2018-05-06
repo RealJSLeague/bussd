@@ -94,6 +94,7 @@ export const Interface = styled.div`
 
 export const VehicleDisplay = styled.div`
   padding: 0;
+  margin: 55px 0 0 0;
 
   @media (min-width: 1024px) {
     padding: 0 0 20px 0;
