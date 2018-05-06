@@ -87,7 +87,7 @@ const MapWithAMarker = withScriptjs(
                   key={stop.stopId}
                   position={{ lat: stop.stopLat, lng: stop.stopLon }}
                   icon={stopIcon}
-                  onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon)}
+                  onClick={() => props.stopClickEvent(stop.stopId, stop.stopLat, stop.stopLon, stop.stopName)}
                 />
               );
             })
@@ -113,13 +113,13 @@ class Map extends Component {
     this.handleResetMarker = this.handleResetMarker.bind(this);
   }
 
-  stopClickEvent(stopId, lat, lng) {
+  stopClickEvent(stopId, lat, lng, stopName) {
     this.setState({
       selectedIcon: stopId
     });
 
     this.props.handleIconBounce();
-    this.props.handleStopClick(stopId);
+    this.props.handleStopClick(stopId, stopName);
   }
 
   vehicleClickEvent(vehicleLat, vehicleLng, vehicleId, tripId, nextStop, scheduleDeviation) {

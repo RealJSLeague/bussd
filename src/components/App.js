@@ -15,7 +15,8 @@ import {
   BodyContainer,
   Interface,
   VehicleDisplay,
-  HideButton
+  HideButton,
+  ListContainer
 } from './Styles.js';
 
 class App extends Component {
@@ -27,7 +28,12 @@ class App extends Component {
       vehicles: [],
       stops: [],
       selectedStop: null,
+      selectedStopName: null,
       selectedVehicle: null,
+      busStopInformation: [],
+      busStopResponse: [],
+      deviation: '',
+      details: {},
       interfaceHeight: '0px',
       interfaceButton: null,
       iconBounce: false
@@ -92,34 +98,28 @@ class App extends Component {
     });
   }
 
-  handleStopClick(stopId) {
-    /* const config = { adapter: http, headers: { 'Access-Control-Allow-Origin': '*' } };
-
-    function convertSecs(time) {
-      let timeSplit = time.split(':');
-      let timeSplitSeconds = +timeSplit[0] * 60 * 60 + +timeSplit[1] * 60 + +timeSplit[2];
-      console.log(timeSplitSeconds);
-      return timeSplitSeconds;
-    }
-
-    let timeNow = moment().format('HH:mm:ss');
-    convertSecs(timeNow);
-
-    let matchedTimes = [];
-
-    axios.get('/api/stop-times/' + stopId, config).then(res => {
-      res.data.forEach(datum => {
-        let convertedDatum = convertSecs(datum.arrivalTime);
-        if (convertedDatum - timeNow > 0) {
-          matchedTimes.push(convertedDatum);
+  handleStopClick(stopId, stopName) {
+    axios
+      .get('/api/stop-times/' + stopId + '/transform', {
+        params: {
+          stopId: stopId
         }
+      })
+      .then(res => {
+        this.setState({
+          selectedStop: stopName,
+          busStopInformation: res.data
+        });
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
-
-    console.log(matchedTimes.length); */
 
     this.setState({
-      selectedStop: stopId
+      interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
+      interfaceHeight: '25vh',
+      selectedVehicle: null
     });
   }
 
@@ -136,6 +136,7 @@ class App extends Component {
       .then(res => {
         this.setState({
           selectedStop: '',
+          busStopInformation: [],
           selectedVehicle: (
             <VehicleDisplay>
               {scheduleDeviation > 0 ? (
@@ -211,8 +212,28 @@ class App extends Component {
             </div>
             <Interface style={{ height: this.state.interfaceHeight }}>
               {this.state.interfaceButton}
-              {this.state.selectedStop}
               {this.state.selectedVehicle}
+              <ul style={{ height: '25vh' }}>
+                <h1>{this.state.selectedStop}</h1>
+                {this.state.busStopInformation.map(function(listValue) {
+                  let listSplit = listValue.split('--');
+                  return (
+                    <li>
+                      <h2>
+                        {' '}
+                        {listSplit[0]}&nbsp;-&nbsp;
+                        <span>{listSplit[1]}</span>
+                      </h2>
+                      <p>
+                        {' '}
+                        Arriving@ &nbsp;{listSplit[2]} &nbsp;<span>{listSplit[3]}</span>
+                      </p>
+                      {/* <p>{listSplit[4]}</p> */}
+                      <hr />
+                    </li>
+                  );
+                })}
+              </ul>
             </Interface>
           </AppBody>
         </Grid>
