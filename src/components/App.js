@@ -117,7 +117,7 @@ class App extends Component {
       });
 
     this.setState({
-      interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
+      //interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
       interfaceHeight: '25vh',
       selectedVehicle: null
     });
@@ -161,7 +161,7 @@ class App extends Component {
               </h3>
             </VehicleDisplay>
           ),
-          interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
+          //interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
           interfaceHeight: '25vh'
         });
       })
@@ -211,7 +211,6 @@ class App extends Component {
               />
             </div>
             <Interface style={{ height: this.state.interfaceHeight }}>
-              {this.state.interfaceButton}
               {this.state.selectedVehicle}
               <ul style={{ height: '25vh' }}>
                 <h1>{this.state.selectedStop}</h1>
