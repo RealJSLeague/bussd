@@ -147,7 +147,7 @@ class App extends Component {
           selectedVehicle: (
             <VehicleDisplay>
               {scheduleDeviation > 0 ? (
-                <img src="../../bus-icon-red.svg" alt="Bus delayed" />
+                <img src="../../bus-icon-red.svg" alt="Bus delayed!" />
               ) : (
                 <img src="../../bus-icon-green.svg" alt="Bus on time" />
               )}
