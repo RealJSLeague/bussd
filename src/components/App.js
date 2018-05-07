@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import '../App.css';
 import Map from './Map.js';
+import Spinner from './Spinner';
 import Styles from './Styles.js';
 import {
   H1,
@@ -99,6 +100,9 @@ class App extends Component {
   }
 
   handleStopClick(stopId, stopName) {
+    this.setState({
+      busStopInformation: []
+    });
     axios
       .get('/api/stop-times/' + stopId + '/transform', {
         params: {
@@ -119,11 +123,15 @@ class App extends Component {
     this.setState({
       //interfaceButton: <HideButton onClick={this.hideInterface}>X</HideButton>,
       interfaceHeight: '25vh',
-      selectedVehicle: null
+      selectedVehicle: null,
+      selectedStop: 'Stop selected'
     });
   }
 
   handleVehicleClick(vehicleId, tripId, nextStop, scheduleDeviation) {
+    this.setState({
+      busStopInformation: []
+    });
     axios
       .get('/api/vehicle/transform', {
         params: {
@@ -136,7 +144,6 @@ class App extends Component {
       .then(res => {
         this.setState({
           selectedStop: '',
-          busStopInformation: [],
           selectedVehicle: (
             <VehicleDisplay>
               {scheduleDeviation > 0 ? (
@@ -173,6 +180,7 @@ class App extends Component {
   hideInterface() {
     this.setState({
       selectedVehicle: null,
+      busStopInformation: [],
       interfaceButton: null,
       interfaceHeight: '0px',
       iconBounce: false
@@ -211,28 +219,35 @@ class App extends Component {
               />
             </div>
             <Interface style={{ height: this.state.interfaceHeight }}>
-              {this.state.selectedVehicle}
-              <ul style={{ height: '25vh' }}>
-                <h1>{this.state.selectedStop}</h1>
-                {this.state.busStopInformation.map(function(listValue) {
-                  let listSplit = listValue.split('--');
-                  return (
-                    <li>
-                      <h2>
-                        {' '}
-                        {listSplit[0]}&nbsp;-&nbsp;
-                        <span>{listSplit[1]}</span>
-                      </h2>
-                      <p>
-                        {' '}
-                        Arriving@ &nbsp;{listSplit[2]} &nbsp;<span>{listSplit[3]}</span>
-                      </p>
-                      {/* <p>{listSplit[4]}</p> */}
-                      <hr />
-                    </li>
-                  );
-                })}
-              </ul>
+              {this.state.selectedVehicle || this.state.busStopInformation.length > 0 ? (
+                this.state.selectedVehicle ? (
+                  this.state.selectedVehicle
+                ) : (
+                  <ul style={{ height: '25vh' }}>
+                    <h1>{this.state.selectedStop}</h1>
+                    {this.state.busStopInformation.map(function(listValue) {
+                      let listSplit = listValue.split('--');
+                      return (
+                        <li>
+                          <h2>
+                            {' '}
+                            {listSplit[0]}&nbsp;-&nbsp;
+                            <span>{listSplit[1]}</span>
+                          </h2>
+                          <p>
+                            {' '}
+                            Arriving@ &nbsp;{listSplit[2]} &nbsp;<span>{listSplit[3]}</span>
+                          </p>
+                          {/* <p>{listSplit[4]}</p> */}
+                          <hr />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )
+              ) : (
+                <Spinner />
+              )}
             </Interface>
           </AppBody>
         </Grid>
